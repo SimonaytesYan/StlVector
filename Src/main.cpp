@@ -14,6 +14,9 @@ void Test8();
 void Test9();
 void Test10();
 void Test11();
+void Test12();
+void Test13();
+void Test14();
 
 #define RUN_TEST(test_num)     \
     PrintTestNum();            \
@@ -32,14 +35,17 @@ int main()
     RUN_TEST(9);
     RUN_TEST(10);
     RUN_TEST(11);
+    RUN_TEST(12);
+    RUN_TEST(13);
+    RUN_TEST(14);
 }
 
 void PrintTestNum()
 {
     static size_t test_cnt = 0;
-    printf("======================================\n");
-    printf("TEST %d\n", ++test_cnt);
-    printf("+++++++\n");
+    fprintf(stderr, "======================================\n");
+    fprintf(stderr, "TEST %d\n", ++test_cnt);
+    fprintf(stderr, "+++++++\n");
 }
 
 // Test simple constructor and operator[]
@@ -50,8 +56,8 @@ void Test1()
         v[i] = 10 - i;
 
     for (int i = 0; i < 10; i++)
-        printf("%d ", v[i]);
-    printf("\n");
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
 }
 
 // Test Front and Back 1
@@ -63,10 +69,10 @@ void Test2()
     int& back  = v.Back();
 
     front = -1;
-    printf("v[0] = %d\n", v[0]);
+    fprintf(stderr, "v[0] = %d\n", v[0]);
 
     back = -2;
-    printf("v[0] = %d\n", v[0]);
+    fprintf(stderr, "v[0] = %d\n", v[0]);
 }
 
 // Test Front and Back 2
@@ -79,29 +85,29 @@ void Test3()
     v.Front() = -1;
     v.Back()  = 100;
     for (int i = 0; i < 10; i++)
-        printf("%d ", v[i]);
-    printf("\n");
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
 }
 
 // Test size
 void Test4()
 {
     Vector<int> v1(10);
-    printf("size     = %d\n", v1.Size());
-    printf("capacity = %d\n", v1.Capacity());
+    fprintf(stderr, "size     = %d\n", v1.Size());
+    fprintf(stderr, "capacity = %d\n", v1.Capacity());
 
     Vector<int> v2(100);
-    printf("size = %d\n", v2.Size());
+    fprintf(stderr, "size = %d\n", v2.Size());
 }
 
 // Test empty
 void Test5()
 {
     Vector<int> v1(0);
-    printf("empty = %d\n", v1.Empty());
+    fprintf(stderr, "empty = %d\n", v1.Empty());
     
     Vector<int> v2(2);
-    printf("empty = %d\n", v2.Empty());
+    fprintf(stderr, "empty = %d\n", v2.Empty());
 }
 
 // Test push_back 1
@@ -110,12 +116,12 @@ void Test6()
     Vector<int> v(3, 2);
     v.PushBack(-1);
     for (int i = 0; i < v.Size(); i++)
-        printf("%d ", v[i]);
-    printf("\n");
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
     
     for (int i = 0; i < v.Capacity(); i++)
-        printf("%d ", v[i]);
-    printf("\n");
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
 }
 
 // Test push_back 2
@@ -125,12 +131,12 @@ void Test7()
     v.PushBack(100);
 
     for (int i = 0; i < v.Size(); i++)
-        printf("%d ", v[i]);
-    printf("\n");
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
 
     for (int i = 0; i < v.Capacity(); i++)
-        printf("%d ", v[i]);
-    printf("\n");
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
 }
 
 // Test push_back 3
@@ -143,12 +149,12 @@ void Test8()
     v.PushBack(-4);
 
     for (int i = 0; i < v.Size(); i++)
-        printf("%d ", v[i]);
-    printf("\n");
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
 
     for (int i = 0; i < v.Capacity(); i++)
-        printf("%d ", v[i]);
-    printf("\n");
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
 }
 
 // Test pop_back 1
@@ -159,12 +165,12 @@ void Test9()
     v.PopBack();
 
     for (int i = 0; i < v.Size(); i++)
-        printf("%d ", v[i]);
-    printf("\n");
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
 
     for (int i = 0; i < v.Capacity(); i++)
-        printf("%d ", v[i]);
-    printf("\n");
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
 }
 
 // Test pop_back 2
@@ -177,23 +183,74 @@ void Test10()
     
     for (int i = 0; i < 5; i++)
     {
-        printf("Back = %d\n", v.Back());
+        fprintf(stderr, "Back = %d\n", v.Back());
         v.PopBack();
     }
 
     for (int i = 0; i < v.Size(); i++)
-        printf("%d ", v[i]);
-    printf("\n");
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
 
     for (int i = 0; i < v.Capacity(); i++)
-        printf("%d ", v[i]);
-    printf("\n");
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
 }
 
+// Test clear
 void Test11()
 {
     Vector<int> v(1);
     v.Clear();
-    printf("size = %d\ncap  = %d\n", v.Size(), v.Capacity());   
+    fprintf(stderr, "size = %d\ncap  = %d\n", v.Size(), v.Capacity());   
 }
 
+// Test Resize 1
+void Test12()
+{
+    Vector<int> v(10);
+    for (int i = 0; i < v.Size(); i++)
+        v[i] = i + 1;
+
+    v.Resize(10);
+    for (int i = 0; i < v.Size(); i++)
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
+
+    for (int i = 0; i < v.Capacity(); i++)
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
+}
+
+// Test Resize 2
+void Test13()
+{
+    Vector<int> v(10);
+    for (int i = 0; i < 10; i++)
+        v[i] = i + 1;
+
+    v.Resize(5);
+    for (int i = 0; i < v.Size(); i++)
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
+
+    for (int i = 0; i < v.Capacity(); i++)
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
+}
+
+// Test Resize 3
+void Test14()
+{
+    Vector<int> v(5);
+    for (int i = 0; i < v.Size(); i++)
+        v[i] = i + 1;
+
+    v.Resize(10, -1);
+    for (int i = 0; i < v.Size(); i++)
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
+
+    for (int i = 0; i < v.Capacity(); i++)
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
+}

@@ -97,7 +97,7 @@ public:
     {
         if (size_ == capacity_)
         {
-            Resize();
+            Realloc();
         }
 
         buffer_[size_] = value;
@@ -115,16 +115,41 @@ public:
         size_ = 0;
     }
 
+    void Resize(size_type new_size)
+    {
+        if (capacity_ < new_size)
+            Realloc(new_size);
+        size_ = new_size;
+    }
+
+    void Resize(size_type new_size, value_type value)
+    {
+        if (capacity_ < new_size)
+            Realloc(new_size);
+
+        if (size_ < new_size)
+        {
+            for (int i = size_; i < new_size; i++)
+                buffer_[i] = value;
+        }
+        size_ = new_size;
+    }
+
 //========================DESTRUCTOR===============================
     ~Vector()
     { delete[] buffer_; }
 
 private:
-    void Resize()
+    void Realloc()
     {
         size_type new_capacity = capacity_ * kExpansionCoeff;
         if (new_capacity == 0)
             new_capacity = kStartLen;
+        Realloc(new_capacity);
+    }
+
+    void Realloc(size_type new_capacity)
+    {
         value_type* new_buffer = new value_type[new_capacity];
         
         for (int i = 0; i < size_; i++)

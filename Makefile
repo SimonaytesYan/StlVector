@@ -14,3 +14,5 @@ run: compile
 create_folders:
 	-mkdir $(BIN)
 
+clean:
+	rm -r $(BIN)
