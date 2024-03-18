@@ -13,6 +13,7 @@ void Test7();
 void Test8();
 void Test9();
 void Test10();
+void Test11();
 
 #define RUN_TEST(test_num)     \
     PrintTestNum();            \
@@ -30,6 +31,7 @@ int main()
     RUN_TEST(8);
     RUN_TEST(9);
     RUN_TEST(10);
+    RUN_TEST(11);
 }
 
 void PrintTestNum()
@@ -188,8 +190,10 @@ void Test10()
     printf("\n");
 }
 
-// Test pop_back
-void Test()
+void Test11()
 {
-
+    Vector<int> v(1);
+    v.Clear();
+    printf("size = %d\ncap  = %d\n", v.Size(), v.Capacity());   
 }
+

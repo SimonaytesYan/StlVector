@@ -110,6 +110,11 @@ public:
             size_--; 
     }
 
+    void Clear()
+    {
+        size_ = 0;
+    }
+
 //========================DESTRUCTOR===============================
     ~Vector()
     { delete[] buffer_; }
