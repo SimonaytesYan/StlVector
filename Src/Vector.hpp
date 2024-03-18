@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string.h>
+#include "VectorIterator.hpp"
 
 template <class T>
 class Vector
@@ -8,8 +9,16 @@ class Vector
 
 public:
 //=====================MEMBER TYPES================================
-    using value_type = T;
-    using size_type  = size_t;
+    using size_type       = size_t;
+    using difference_type = std::ptrdiff_t; 
+    using value_type      = T;
+    using pointer         = T*;
+    using reference       = T&;
+
+    using iterator               = VectorIterator<T>;
+    using const_iterator         = VectorIterator<const T>; // ?
+    // using reverse_iterator       = VectorReverseIterator<T>;
+    // using const_reverse_iterator = VectorReverseIterator<const T>; // ?
 
 //=====================CONSTRUCTORS================================
     Vector(size_type size) :
@@ -39,7 +48,7 @@ public:
     size_     (other.size_),
     capacity_ (other.capacity_)
     {  Swap(other.buffer_, buffer_); }
-    
+
 //=========================OPERATORS===============================
     Vector<T>& operator=(const Vector<T>& other)
     {
@@ -79,7 +88,7 @@ public:
     const value_type& Back() const
     { return buffer_[size_ - 1]; }
     
-    value_type& Back() const
+    value_type& Back()
     { return buffer_[size_ - 1]; }
 
     size_type Size() const
@@ -111,9 +120,7 @@ public:
     }
 
     void Clear()
-    {
-        size_ = 0;
-    }
+    { size_ = 0; }
 
     void Resize(size_type new_size)
     {
@@ -141,9 +148,42 @@ public:
             Realloc(new_capacity);
     }
 
+    iterator Begin()
+    { return iterator(buffer_); }
+
+    iterator End()
+    { return iterator(buffer_ + size_); }
+
+    void Insert(const iterator& iterator, const value_type& new_elem)
+    {
+        size_type index = &(*iterator) - buffer_;
+
+         if (size_ == capacity_)
+             Realloc();
+
+        size_++;
+        for (int i = size_ - 1; i > index; i--)
+            buffer_[i] = buffer_[i - 1];
+        buffer_[index] = new_elem;
+    }
+
 //========================DESTRUCTOR===============================
     ~Vector()
     { delete[] buffer_; }
+
+    void DumpToSize()
+    {
+        for (int i = 0; i < size_; i++)
+            fprintf(stderr, "%d ", buffer_[i]);
+        fprintf(stderr, "\n");
+    }
+
+    void DumpToCap()
+    {
+        for (int i = 0; i < capacity_; i++)
+            fprintf(stderr, "%d ", buffer_[i]);
+        fprintf(stderr, "\n");
+    }
 
 private:
     void Realloc()
