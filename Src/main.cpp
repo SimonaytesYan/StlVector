@@ -88,8 +88,8 @@ void Test4()
 void Test5()
 {
     Vector<int> v1(0);
-    printf("empty = %d\n", v1.empty());
+    printf("empty = %d\n", v1.Empty());
     
     Vector<int> v2(2);
-    printf("empty = %d\n", v2.empty());
+    printf("empty = %d\n", v2.Empty());
 }
