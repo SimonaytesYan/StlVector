@@ -41,7 +41,7 @@ public:
     buffer_   (other.buffer_)
     { }
     
-//=====================OPERATORS==========================
+//=========================OPERATORS==========================
     Vector<T>& operator=(const Vector<T>& other)
     {
         size_     = other.size_;
@@ -64,15 +64,29 @@ public:
         return *this;
     }
 
-    T& operator[](size_type index)
-    {
-        return buffer_[index];
-    }
+    value_type& operator[](size_type index)
+    { return buffer_[index]; }
 
+    const value_type& operator[](size_type index) const
+    { return buffer_[index]; }
+
+//=======================GET INFO================================
+    const value_type& front() const
+    { return buffer_[0]; }
+    
+    value_type& front()
+    { return buffer_[0]; }
+
+    const value_type& back() const
+    { return buffer_[size_ - 1]; }
+    
+    value_type& back()
+    { return buffer_[size_ - 1]; }
+
+    
+//=====================DESTRUCTOR==========================
     ~Vector()
-    {
-        delete[] buffer_;
-    }
+    { delete[] buffer_; }
 
 private:
     const size_type kExpansionCoeff = 2;
