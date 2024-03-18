@@ -37,9 +37,8 @@ public:
 
     Vector(Vector&& other) :
     size_     (other.size_),
-    capacity_ (other.capacity_),
-    buffer_   (other.buffer_)
-    { }
+    capacity_ (other.capacity_)
+    {  Swap(other.buffer_, buffer_); }
     
 //=========================OPERATORS==========================
     Vector<T>& operator=(const Vector<T>& other)
@@ -59,7 +58,7 @@ public:
     {
         size_     = other.size_;
         capacity_ = other.capacity_;
-        buffer_   = Swap(other.buffer_, buffer_);
+        Swap(other.buffer_, buffer_);
         
         return *this;
     }
@@ -83,7 +82,15 @@ public:
     value_type& back()
     { return buffer_[size_ - 1]; }
 
+    size_type Size()
+    { return size_; }
+
+    size_type Capacity()
+    { return capacity_; }
     
+    bool Empty()
+    { return size_ == 0; }
+
 //=====================DESTRUCTOR==========================
     ~Vector()
     { delete[] buffer_; }
