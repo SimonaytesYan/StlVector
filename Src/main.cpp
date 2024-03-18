@@ -28,6 +28,11 @@ void Test21();
 void Test22();
 void Test23();
 void Test24();
+void Test25();
+void Test26();
+void Test27();
+void Test28();
+void Test29();
 
 #define RUN_TEST(test_num)     \
     PrintTestNum();            \
@@ -59,6 +64,11 @@ int main()
     RUN_TEST(22);
     RUN_TEST(23);
     RUN_TEST(24);
+    RUN_TEST(25);
+    RUN_TEST(26);
+    RUN_TEST(27);
+    RUN_TEST(28);
+    RUN_TEST(29);
 }
 
 void PrintTestNum()
@@ -304,7 +314,7 @@ void Test20()
     v.DumpToSize();
 }
 
-// Test Erase 1
+// Test Erase(Iter) 1
 void Test21()
 {
     Vector<int> v(5);
@@ -316,7 +326,7 @@ void Test21()
     v.DumpToSize();
 }
 
-// Test Erase 2
+// Test Erase(Iter) 2
 void Test22()
 {
     Vector<int> v(5);
@@ -328,7 +338,7 @@ void Test22()
     v.DumpToSize();
 }
 
-// Test Erase 3
+// Test Erase(Iter) 3
 void Test23()
 {
     Vector<int> v(5);
@@ -340,11 +350,76 @@ void Test23()
     v.DumpToSize();
 }
 
-// Test Erase 4
+// Test Erase(Iter) 4
 void Test24()
 {
     Vector<int> v(1, -1);
 
     v.Erase(v.Begin());
+    v.DumpToSize();
+}
+
+// Test Erase(Iter, Iter) 1
+void Test25()
+{
+    Vector<int> v(5);
+    for (int i = 0; i < v.Size(); i++)
+        v[i] = i + 1;
+
+    auto start = v.Begin();
+    auto end   = v.End();
+    v.Erase(start, end);
+    v.DumpToSize();
+}
+
+// Test Erase(Iter, Iter) 2
+void Test26()
+{
+    Vector<int> v(10);
+    for (int i = 0; i < v.Size(); i++)
+        v[i] = i + 1;
+
+    auto start = v.Begin() + 1;
+    auto end   = v.End()   - 2;
+    v.Erase(start, end);
+    v.DumpToSize();
+}
+
+// Test Erase(Iter, Iter) 3
+void Test27()
+{
+    Vector<int> v(10);
+    for (int i = 0; i < v.Size(); i++)
+        v[i] = i + 1;
+
+    auto start = v.Begin() + 6;
+    auto end   = v.End() - 1;
+    v.Erase(start, end);
+    v.DumpToSize();
+}
+
+// Test Erase(Iter, Iter) 4
+void Test28()
+{
+    Vector<int> v(10);
+    for (int i = 0; i < v.Size(); i++)
+        v[i] = i + 1;
+
+    auto start = v.Begin();
+    auto end   = v.Begin();
+    v.Erase(start, end);
+    v.DumpToSize();
+}
+
+// Test Erase(Iter, Iter) 5
+void Test29()
+{
+    Vector<int> v(10);
+    for (int i = 0; i < v.Size(); i++)
+        v[i] = i + 1;
+
+    auto start = v.Begin();
+    auto end   = v.Begin() + 1;
+    v.Erase(start, end);
     v.DumpToSize();
 }

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string.h>
+#include <assert.h>
+
 #include "VectorIterator.hpp"
 
 template <class T>
@@ -32,7 +34,7 @@ public:
     capacity_ (size),
     buffer_   (new value_type[size])
     {
-        for (int i = 0; i < size; i++)
+        for (size_type i = 0; i < size; i++)
             buffer_[i] = value;
     }
 
@@ -57,7 +59,7 @@ public:
 
         delete[] buffer_;
         buffer_ = new value_type[capacity_];
-        for (int i = 0; i < size_; i++)
+        for (size_type i = 0; i < size_; i++)
             buffer_[i] = other.buffer_[i];
         
         return *this;
@@ -136,7 +138,7 @@ public:
 
         if (size_ < new_size)
         {
-            for (int i = size_; i < new_size; i++)
+            for (size_type i = size_; i < new_size; i++)
                 buffer_[i] = value;
         }
         size_ = new_size;
@@ -156,26 +158,45 @@ public:
 
     void Insert(const iterator& iterator, const value_type& new_elem)
     {
+        assert(Begin() <= iterator && iterator <= End());
+
         size_type index = &(*iterator) - buffer_;
 
          if (size_ == capacity_)
              Realloc();
 
         size_++;
-        for (int i = size_ - 1; i > index; i--)
+        for (size_type i = size_ - 1; i > index; i--)
             buffer_[i] = buffer_[i - 1];
         buffer_[index] = new_elem;
     }
 
     void Erase(const iterator& iterator)
     {
-        size_type index = &(*iterator) - buffer_;
+        assert(Begin() <= iterator && iterator < End());
+
+        size_type index = iterator - Begin();
         size_--;
         // TODO элементы по индексу buffer_[size_] и buffer_[size_] равны. 
         //  Потенциальное говно при удалении
 
-        for (int i = index; i < size_; i++)
+        for (size_type i = index; i < size_; i++)
             buffer_[i] = buffer_[i + 1];
+    }
+
+    void Erase(const iterator& it1, const iterator& it2)
+    {
+        assert(Begin() <= it1 && it1 < End());
+        assert(Begin() <= it2 && it2 <= End());
+
+        size_type start = it1 - Begin();
+        size_type shift = it2 - it1;
+
+        for (size_type index = start; index < start + (size_ - shift); index++)
+            buffer_[index] = buffer_[index + shift];
+
+        // TODO Аналогично с Erase(Iter)
+        size_ -= shift;
     }
 
 //========================DESTRUCTOR===============================
@@ -184,14 +205,14 @@ public:
 
     void DumpToSize()
     {
-        for (int i = 0; i < size_; i++)
+        for (size_type i = 0; i < size_; i++)
             fprintf(stderr, "%d ", buffer_[i]);
         fprintf(stderr, "\n");
     }
 
     void DumpToCap()
     {
-        for (int i = 0; i < capacity_; i++)
+        for (size_type i = 0; i < capacity_; i++)
             fprintf(stderr, "%d ", buffer_[i]);
         fprintf(stderr, "\n");
     }
@@ -209,7 +230,7 @@ private:
     {
         value_type* new_buffer = new value_type[new_capacity];
         
-        for (int i = 0; i < size_; i++)
+        for (size_type i = 0; i < size_; i++)
             new_buffer[i] = buffer_[i];
         
         delete[] buffer_;
