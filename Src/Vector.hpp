@@ -70,16 +70,16 @@ public:
     { return buffer_[index]; }
 
 //=========================GET INFO================================
-    const value_type& front() const
+    const value_type& Front() const
     { return buffer_[0]; }
     
-    value_type& front()
+    value_type& Front()
     { return buffer_[0]; }
 
-    const value_type& back() const
+    const value_type& Back() const
     { return buffer_[size_ - 1]; }
     
-    value_type& back()
+    value_type& Back()
     { return buffer_[size_ - 1]; }
 
     size_type Size()
