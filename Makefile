@@ -5,9 +5,12 @@ SRC = Src/
 BIN = Bin/
 ELF_FILE = $(BIN)run
 
-compile:
+compile: create_folders
 	$(COMPILER) $(SRC)main.cpp -o $(ELF_FILE)
 
 run: compile
 	./$(ELF_FILE)
-	
+
+create_folders:
+	-mkdir $(BIN)
+

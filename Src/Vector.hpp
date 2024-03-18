@@ -1,11 +1,12 @@
 #pragma once
 
-#include <strinig.h>
+#include <string.h>
 
 template <class T>
 class Vector
 {
 
+public:
 //=====================MEMBER TYPES==========================
     using value_type = T;
     using size_type  = size_t;
@@ -29,9 +30,9 @@ class Vector
     Vector(const Vector<T>& other) :
     size_     (other.size),
     capacity_ (other.capacity),
-    buffer_   (new value_type[capacity])
+    buffer_   (new value_type[capacity_])
     {
-        memcpy(buffer_, v.buffer, sizeof(value_type) * size_);
+        memcpy(buffer_, other.buffer_, sizeof(value_type) * size_);
     }
 
     Vector(Vector&& other) :
@@ -49,7 +50,7 @@ class Vector
         delete[] buffer_;
         buffer_ = new value_type[capacity_];
         for (int i = 0; i < size_; i++)
-            buffer_[i] = other_.buffer[i];
+            buffer_[i] = other.buffer_[i];
         
         return *this;
     }
@@ -58,7 +59,7 @@ class Vector
     {
         size_     = other.size_;
         capacity_ = other.capacity_;
-        buffer_   = std::swap(other.buffer_, buffer_);
+        buffer_   = Swap(other.buffer_, buffer_);
         
         return *this;
     }
@@ -80,3 +81,11 @@ private:
     size_type   capacity_;
     value_type* buffer_;
 };
+
+template<class T>
+static void Swap(T& a, T& b)
+{
+    T c = a;
+    a = b;
+    b = c;
+}
