@@ -17,6 +17,8 @@ void Test11();
 void Test12();
 void Test13();
 void Test14();
+void Test15();
+void Test16();
 
 #define RUN_TEST(test_num)     \
     PrintTestNum();            \
@@ -38,6 +40,8 @@ int main()
     RUN_TEST(12);
     RUN_TEST(13);
     RUN_TEST(14);
+    RUN_TEST(15);
+    RUN_TEST(16);
 }
 
 void PrintTestNum()
@@ -246,6 +250,40 @@ void Test14()
         v[i] = i + 1;
 
     v.Resize(10, -1);
+    for (int i = 0; i < v.Size(); i++)
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
+
+    for (int i = 0; i < v.Capacity(); i++)
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
+}
+
+// Test Reserve 1
+void Test15()
+{
+    Vector<int> v(5);
+    for (int i = 0; i < v.Size(); i++)
+        v[i] = i + 1;
+
+    v.Reserve(10);
+    for (int i = 0; i < v.Size(); i++)
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
+
+    for (int i = 0; i < v.Capacity(); i++)
+        fprintf(stderr, "%d ", v[i]);
+    fprintf(stderr, "\n");
+}
+
+// Test Reserve 2
+void Test16()
+{
+    Vector<int> v(10);
+    for (int i = 0; i < v.Size(); i++)
+        v[i] = i + 1;
+
+    v.Reserve(5);
     for (int i = 0; i < v.Size(); i++)
         fprintf(stderr, "%d ", v[i]);
     fprintf(stderr, "\n");

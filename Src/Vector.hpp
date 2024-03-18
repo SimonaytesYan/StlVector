@@ -91,7 +91,7 @@ public:
     bool Empty()
     { return size_ == 0; }
 
-//========================CHANGE VALUE=============================
+//========================CHANGE VECTOR=============================
 
     void PushBack(const T& value)
     {
@@ -133,6 +133,12 @@ public:
                 buffer_[i] = value;
         }
         size_ = new_size;
+    }
+
+    void Reserve(size_type new_capacity)
+    {
+        if (capacity_ < new_capacity)
+            Realloc(new_capacity);
     }
 
 //========================DESTRUCTOR===============================
