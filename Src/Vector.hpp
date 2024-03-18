@@ -7,11 +7,11 @@ class Vector
 {
 
 public:
-//=====================MEMBER TYPES==========================
+//=====================MEMBER TYPES================================
     using value_type = T;
     using size_type  = size_t;
 
-//=====================CONSTRUCTORS==========================
+//=====================CONSTRUCTORS================================
     Vector(size_type size) :
     size_     (size),
     capacity_ (size),
@@ -40,7 +40,7 @@ public:
     capacity_ (other.capacity_)
     {  Swap(other.buffer_, buffer_); }
     
-//=========================OPERATORS==========================
+//=========================OPERATORS===============================
     Vector<T>& operator=(const Vector<T>& other)
     {
         size_     = other.size_;
@@ -69,7 +69,7 @@ public:
     const value_type& operator[](size_type index) const
     { return buffer_[index]; }
 
-//=======================GET INFO================================
+//=========================GET INFO================================
     const value_type& front() const
     { return buffer_[0]; }
     
@@ -91,12 +91,48 @@ public:
     bool Empty()
     { return size_ == 0; }
 
-//=====================DESTRUCTOR==========================
+//========================CHANGE VALUE=============================
+
+    void PushBack(const T& value)
+    {
+        if (size_ == capacity_)
+        {
+            Resize();
+        }
+
+        buffer_[size_] = value;
+        size_++;
+    }
+
+    void PopBack()
+    { 
+        if (size_ > 0)
+            size_--; 
+    }
+
+//========================DESTRUCTOR===============================
     ~Vector()
     { delete[] buffer_; }
 
 private:
+    void Resize()
+    {
+        size_type new_capacity = capacity_ * kExpansionCoeff;
+        if (new_capacity == 0)
+            new_capacity = kStartLen;
+        value_type* new_buffer = new value_type[new_capacity];
+        
+        for (int i = 0; i < size_; i++)
+            new_buffer[i] = buffer_[i];
+        
+        delete[] buffer_;
+        capacity_ = new_capacity;
+        buffer_   = new_buffer;
+    }
+
+private:
     const size_type kExpansionCoeff = 2;
+    const size_type kStartLen       = 2;
 
     size_type   size_;
     size_type   capacity_;

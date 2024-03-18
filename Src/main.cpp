@@ -8,8 +8,9 @@ void Test2();
 void Test3();
 void Test4();
 void Test5();
-
-const size_t test_number = 5;
+void Test6();
+void Test7();
+void Test8();
 
 #define RUN_TEST(test_num)     \
     PrintTestNum();            \
@@ -22,6 +23,9 @@ int main()
     RUN_TEST(3);
     RUN_TEST(4);
     RUN_TEST(5);
+    RUN_TEST(6);
+    RUN_TEST(7);
+    RUN_TEST(8);
 }
 
 void PrintTestNum()
@@ -44,7 +48,7 @@ void Test1()
     printf("\n");
 }
 
-// Test 1 front and back
+// Test front and back 1
 void Test2()
 {
     Vector<int> v(1);
@@ -59,7 +63,7 @@ void Test2()
     printf("v[0] = %d\n", v[0]);
 }
 
-// Test 2 front and back
+// Test front and back 2
 void Test3()
 {
     Vector<int> v(10);
@@ -92,4 +96,57 @@ void Test5()
     
     Vector<int> v2(2);
     printf("empty = %d\n", v2.Empty());
+}
+
+// Test push_back 1
+void Test6()
+{
+    Vector<int> v(3, 2);
+    v.PushBack(-1);
+    for (int i = 0; i < v.Size(); i++)
+        printf("%d ", v[i]);
+    printf("\n");
+    
+    for (int i = 0; i < v.Capacity(); i++)
+        printf("%d ", v[i]);
+    printf("\n");
+}
+
+// Test push_back 2
+void Test7()
+{
+    Vector<int> v(0);
+    v.PushBack(100);
+
+    for (int i = 0; i < v.Size(); i++)
+        printf("%d ", v[i]);
+    printf("\n");
+
+    for (int i = 0; i < v.Capacity(); i++)
+        printf("%d ", v[i]);
+    printf("\n");
+}
+
+// Test push_back 3
+void Test8()
+{
+    Vector<int> v(0);
+    v.PushBack(-1);
+    v.PushBack(-2);
+    v.PushBack(-3);
+    v.PushBack(-4);
+
+    for (int i = 0; i < v.Size(); i++)
+        printf("%d ", v[i]);
+    printf("\n");
+
+    for (int i = 0; i < v.Capacity(); i++)
+        printf("%d ", v[i]);
+    printf("\n");
+}
+
+// Test pop_back
+void Test()
+{
+
 }
