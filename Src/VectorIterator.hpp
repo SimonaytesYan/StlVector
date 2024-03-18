@@ -28,10 +28,13 @@ public:
     const T& operator*() const
     { return *iter_; }
 
-    VectorIterator operator+(difference_type value)
+    difference_type operator-(const VectorIterator<T>& other) const
+    { return iter_ - other.iter_; }
+
+    VectorIterator operator+(difference_type value) const
     { return iter_ + value; }
     
-    VectorIterator operator-(difference_type value)
+    VectorIterator operator-(difference_type value) const
     { return iter_ - value; }
 
     VectorIterator& operator+=(difference_type value)
@@ -74,28 +77,22 @@ public:
         return old_iter;
     }
 
-    difference_type operator-(const VectorIterator<T>& other)
-    { return iter_ - other.iter_; }
-
-    // difference_type operator+(const VectorIterator<T>& other)
-    // { return iter_ + other.iter_; }
-
-    bool operator==(const VectorIterator& other)
+    bool operator==(const VectorIterator& other) const
     { return iter_ == other.iter_; }
 
-    bool operator!=(const VectorIterator& other)
+    bool operator!=(const VectorIterator& other) const
     { return iter_ != other.iter_; }
 
-    bool operator<(const VectorIterator& other)
+    bool operator<(const VectorIterator& other) const
     { return (iter_ < other.iter_); }
 
-    bool operator>(const VectorIterator& other)
+    bool operator>(const VectorIterator& other) const
     { return (iter_ > other.iter_); }
 
-    bool operator<=(const VectorIterator& other)
+    bool operator<=(const VectorIterator& other) const
     { return (iter_ <= other.iter_); }
 
-    bool operator>=(const VectorIterator& other)
+    bool operator>=(const VectorIterator& other) const
     { return (iter_ >= other.iter_); }
 
 private:
