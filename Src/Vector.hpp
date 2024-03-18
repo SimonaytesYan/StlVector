@@ -21,7 +21,7 @@ public:
     // using const_reverse_iterator = VectorReverseIterator<const T>; // ?
 
 //=====================CONSTRUCTORS================================
-    Vector(size_type size) :
+    Vector(size_type size = 0) :
     size_     (size),
     capacity_ (size),
     buffer_   (new value_type[size])
@@ -165,6 +165,17 @@ public:
         for (int i = size_ - 1; i > index; i--)
             buffer_[i] = buffer_[i - 1];
         buffer_[index] = new_elem;
+    }
+
+    void Erase(const iterator& iterator)
+    {
+        size_type index = &(*iterator) - buffer_;
+        size_--;
+        // TODO элементы по индексу buffer_[size_] и buffer_[size_] равны. 
+        //  Потенциальное говно при удалении
+
+        for (int i = index; i < size_; i++)
+            buffer_[i] = buffer_[i + 1];
     }
 
 //========================DESTRUCTOR===============================

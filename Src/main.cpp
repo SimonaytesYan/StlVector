@@ -24,6 +24,10 @@ void Test17();
 void Test18();
 void Test19();
 void Test20();
+void Test21();
+void Test22();
+void Test23();
+void Test24();
 
 #define RUN_TEST(test_num)     \
     PrintTestNum();            \
@@ -51,6 +55,10 @@ int main()
     RUN_TEST(18);
     RUN_TEST(19);
     RUN_TEST(20);
+    RUN_TEST(21);
+    RUN_TEST(22);
+    RUN_TEST(23);
+    RUN_TEST(24);
 }
 
 void PrintTestNum()
@@ -293,5 +301,50 @@ void Test20()
     it += 3;
 
     v.Insert(it, -1);
+    v.DumpToSize();
+}
+
+// Test Erase 1
+void Test21()
+{
+    Vector<int> v(5);
+    for (int i = 0; i < v.Size(); i++)
+        v[i] = i + 1;
+
+    auto it = v.Begin();
+    v.Erase(it);
+    v.DumpToSize();
+}
+
+// Test Erase 2
+void Test22()
+{
+    Vector<int> v(5);
+    for (int i = 0; i < v.Size(); i++)
+        v[i] = i + 1;
+
+    auto it = v.End() - 1;
+    v.Erase(it);
+    v.DumpToSize();
+}
+
+// Test Erase 3
+void Test23()
+{
+    Vector<int> v(5);
+    for (int i = 0; i < v.Size(); i++)
+        v[i] = i + 1;
+
+    auto it = v.End() - 3;
+    v.Erase(it);
+    v.DumpToSize();
+}
+
+// Test Erase 4
+void Test24()
+{
+    Vector<int> v(1, -1);
+
+    v.Erase(v.Begin());
     v.DumpToSize();
 }
