@@ -79,16 +79,16 @@ public:
     const value_type& Back() const
     { return buffer_[size_ - 1]; }
     
-    value_type& Back()
+    value_type& Back() const
     { return buffer_[size_ - 1]; }
 
-    size_type Size()
+    size_type Size() const
     { return size_; }
 
-    size_type Capacity()
+    size_type Capacity() const
     { return capacity_; }
     
-    bool Empty()
+    bool Empty() const
     { return size_ == 0; }
 
 //========================CHANGE VECTOR=============================
