@@ -83,7 +83,7 @@ void PrintTestNum()
 {
     static size_t test_cnt = 0;
     fprintf(stderr, "======================================\n");
-    fprintf(stderr, "TEST %d\n", ++test_cnt);
+    fprintf(stderr, "TEST %llu\n", ++test_cnt);
     fprintf(stderr, "+++++++\n");
 }
 
@@ -501,4 +501,6 @@ void Test33()
         printf("array[%d].a = %d\n", i, array[i].a_);
         printf("array[%d].c = %c\n", i, array[i].c_);
     }
+
+    alloc.deallocate(array, 2);
 }

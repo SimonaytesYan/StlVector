@@ -232,7 +232,7 @@ public:
     {
         for (size_type i = 0; i < size_; i++)
             allocator.destruct(&buffer_[i]);
-        allocator.deallocate(buffer_, size_);
+        allocator.deallocate(buffer_, capacity_);
     }
 
     void DumpToSize()
@@ -267,7 +267,7 @@ private:
         
         for (size_type i = 0; i < size_; i++)
             allocator.destruct(&buffer_[i]);
-        allocator.deallocate(buffer_, size_);
+        allocator.deallocate(buffer_, capacity_);
 
         capacity_ = new_capacity;
         buffer_   = new_buffer;
