@@ -214,6 +214,12 @@ public:
         return Begin() + index;
     }
 
+    template<class... Args>
+    void EmplaceBack(Args&&... args)
+    {
+        ShiftRight(End(), args...);
+    }
+
 //========================ITERATORS================================
 
     iterator Begin()
@@ -293,7 +299,7 @@ private:
         assert(Begin() < const_pos);
         assert(const_pos <= End());
         
-        size_type index = const_pos - Begin() - 1;
+        size_type index = const_pos - Begin();
 
         if (size_ == capacity_)
             Realloc();

@@ -38,6 +38,7 @@ void Test31();
 void Test32();
 void Test33();
 void Test34();
+void Test35();
 
 #define RUN_TEST(test_num)     \
     PrintTestNum();            \
@@ -79,6 +80,7 @@ int main()
     RUN_TEST(32);
     RUN_TEST(33);
     RUN_TEST(34);
+    RUN_TEST(35);
 }
 
 void PrintTestNum()
@@ -512,6 +514,18 @@ void Test34()
     Vector<A> v(2, {10, 'a'});
 
     v.Emplace(v.Begin() + 1, -1, '4');
+
+    for (size_t i = 0; i < v.Size(); i++)
+        printf("{%d, %c} ", v[i].a_, v[i].c_);
+    printf("\n");
+}
+
+// Test EmplaceBack
+void Test35()
+{
+    Vector<A> v(2, {10, 'a'});
+
+    v.EmplaceBack(-1, '4');
 
     for (size_t i = 0; i < v.Size(); i++)
         printf("{%d, %c} ", v[i].a_, v[i].c_);
