@@ -6,16 +6,18 @@
 #include "VectorIterator.hpp"
 #include "DefaultVectorAllocator.hpp"
 
-template <class T>
+template <class T, class Allocator = DefaultVectorAllocator<T>>
 class Vector
 {
 
 public:
 //=====================MEMBER TYPES================================
     using size_type       = size_t;
+    using allocator_type  = Allocator;
     using difference_type = std::ptrdiff_t; 
     using value_type      = T;
-    using pointer         = T*;
+    using pointer         = typename Allocator::pointer;
+    using const_pointer   = typename Allocator::const_pointer;
     using reference       = T&;
 
     using iterator               = VectorIterator<T>;
@@ -27,41 +29,44 @@ public:
     Vector(size_type size = 0) :
     size_     (size),
     capacity_ (size),
-    buffer_   (new value_type[size])
+    buffer_   (allocator.allocate(size))
     { }
 
     Vector(size_type size, const value_type& value) :
     size_     (size),
     capacity_ (size),
-    buffer_   (new value_type[size])
+    buffer_   (allocator.allocate(size))
     {
         for (size_type i = 0; i < size; i++)
-            buffer_[i] = value;
+            allocator.construct(&buffer_[i], value);
     }
 
     Vector(const Vector<T>& other) :
     size_     (other.size),
     capacity_ (other.capacity),
-    buffer_   (new value_type[capacity_])
+    buffer_   (allocator.allocate(capacity_))
     {
-        memcpy(buffer_, other.buffer_, sizeof(value_type) * size_);
+        for (int i = 0; i < size_; i++)
+            allocator.construct(&buffer_[i], other.buffer_[i]);
     }
 
     Vector(Vector&& other) :
     size_     (other.size_),
-    capacity_ (other.capacity_)
+    capacity_ (other.capacity_),
+    buffer_   (nullptr)
     {  Swap(other.buffer_, buffer_); }
 
 //=========================OPERATORS===============================
     Vector<T>& operator=(const Vector<T>& other)
     {
+        size_type old_capacity;
         size_     = other.size_;
         capacity_ = other.capacity_;
 
-        delete[] buffer_;
-        buffer_ = new value_type[capacity_];
+        allocator.deallocate(buffer_, old_capacity);
+        buffer_ = allocator.allocate(capacity_);
         for (size_type i = 0; i < size_; i++)
-            buffer_[i] = other.buffer_[i];
+            allocator.construct(&buffer_[i], other.buffer_[i]);
         
         return *this;
     }
@@ -108,11 +113,9 @@ public:
     void PushBack(const T& value)
     {
         if (size_ == capacity_)
-        {
             Realloc();
-        }
 
-        buffer_[size_] = value;
+        allocator.construct(&buffer_[size_], value);
         size_++;
     }
 
@@ -140,7 +143,7 @@ public:
         if (size_ < new_size)
         {
             for (size_type i = size_; i < new_size; i++)
-                buffer_[i] = value;
+                allocator.construct(&buffer_[i], value);
         }
         size_ = new_size;
     }
@@ -151,7 +154,7 @@ public:
             Realloc(new_capacity);
     }
 
-    void Insert(const iterator& iterator, const value_type& new_elem)
+    void Insert(const iterator& iterator, const value_type& value)
     {
         assert(Begin() <= iterator && iterator <= End());
 
@@ -159,11 +162,13 @@ public:
 
          if (size_ == capacity_)
              Realloc();
-
-        size_++;
+ 
+        allocator.construct(&buffer_[size_], buffer_[size_ - 1]);
         for (size_type i = size_ - 1; i > index; i--)
             buffer_[i] = buffer_[i - 1];
-        buffer_[index] = new_elem;
+        size_++;
+
+        buffer_[index] = value;
     }
 
     void Erase(const iterator& iterator)
@@ -172,11 +177,10 @@ public:
 
         size_type index = iterator - Begin();
         size_--;
-        // TODO элементы по индексу buffer_[size_] и buffer_[size_] равны. 
-        //  Потенциальное говно при удалении
 
         for (size_type i = index; i < size_; i++)
             buffer_[i] = buffer_[i + 1];
+        allocator.destruct(&buffer_[size_]);
     }
 
     void Erase(const iterator& it1, const iterator& it2)
@@ -191,7 +195,9 @@ public:
         for (size_type index = start; index < end; index++)
             buffer_[index] = buffer_[index + shift];
 
-        // TODO Аналогично с Erase(Iter)
+        for (size_type index = end; index < size_; index++)
+            allocator.destruct(&buffer_[index]);
+
         size_ -= shift;
     }
 
@@ -223,7 +229,11 @@ public:
 
 //========================DESTRUCTOR===============================
     ~Vector()
-    { delete[] buffer_; }
+    {
+        for (size_type i = 0; i < size_; i++)
+            allocator.destruct(&buffer_[i]);
+        allocator.deallocate(buffer_, size_);
+    }
 
     void DumpToSize()
     {
@@ -250,12 +260,15 @@ private:
 
     void Realloc(size_type new_capacity)
     {
-        value_type* new_buffer = new value_type[new_capacity];
+        value_type* new_buffer = allocator.allocate(new_capacity);
         
         for (size_type i = 0; i < size_; i++)
-            new_buffer[i] = buffer_[i];
+            allocator.construct(&new_buffer[i], buffer_[i]);
         
-        delete[] buffer_;
+        for (size_type i = 0; i < size_; i++)
+            allocator.destruct(&buffer_[i]);
+        allocator.deallocate(buffer_, size_);
+
         capacity_ = new_capacity;
         buffer_   = new_buffer;
     }
@@ -267,6 +280,8 @@ private:
     size_type   size_;
     size_type   capacity_;
     value_type* buffer_;
+
+    Allocator allocator; 
 };
 
 template<class T>
