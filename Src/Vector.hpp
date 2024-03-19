@@ -206,9 +206,12 @@ public:
     }
 
     template<class... Args>
-    iterator Emplace(const_iterator pos, Args&&... args)
+    iterator Emplace(const iterator& pos, Args&&... args)
     {
+        size_type index = pos - Begin() - 1;
         ShiftRight(pos, args...);
+
+        return Begin() + index;
     }
 
 //========================ITERATORS================================
@@ -287,18 +290,17 @@ private:
     template<class ...Args>
     void ShiftRight(const iterator& const_pos, Args ...arg)
     {
-        assert(Begin() < const_pos && const_pos <= End());
+        assert(Begin() < const_pos);
+        assert(const_pos <= End());
         
         size_type index = const_pos - Begin() - 1;
 
         if (size_ == capacity_)
-             Realloc();
+            Realloc();
         
-        iterator pos = Begin() + index;
- 
         allocator_.construct(&buffer_[size_], arg...);
-        for (auto it = End() - 1; it > pos; it--)
-            Swap(*it, *(it - 1));
+        for (size_type i = size_; i > index; i--)
+            Swap(buffer_[i], buffer_[i - 1]);
         size_++;
     }
 

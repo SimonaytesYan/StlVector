@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <algorithm>
 
-#include "Vector.hpp"
+ #include "Vector.hpp"
 
 void PrintTestNum();
 void Test1();
@@ -37,6 +37,7 @@ void Test30();
 void Test31();
 void Test32();
 void Test33();
+void Test34();
 
 #define RUN_TEST(test_num)     \
     PrintTestNum();            \
@@ -77,6 +78,7 @@ int main()
     RUN_TEST(31);
     RUN_TEST(32);
     RUN_TEST(33);
+    RUN_TEST(34);
 }
 
 void PrintTestNum()
@@ -91,7 +93,7 @@ void PrintTestNum()
 void Test1()
 {
     Vector<int> v(10);
-    for (size_t i = 0; i < 10; i++)
+    for (size_t i = 0; i < v.Size(); i++)
         v[i] = 10 - (int)i;
 
     v.DumpToSize();
@@ -503,3 +505,16 @@ void Test33()
 
     alloc.deallocate(array, 2);
 }
+
+// Test Emplace
+void Test34()
+{
+    Vector<A> v(2, {10, 'a'});
+
+    v.Emplace(v.Begin() + 1, -1, '4');
+
+    for (size_t i = 0; i < v.Size(); i++)
+        printf("{%d, %c} ", v[i].a_, v[i].c_);
+    printf("\n");
+}
+
