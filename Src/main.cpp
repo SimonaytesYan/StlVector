@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <algorithm>
 
- #include "Vector.hpp"
+#include "Vector.hpp"
 
 void PrintTestNum();
 void Test1();
@@ -531,4 +531,3 @@ void Test35()
         printf("{%d, %c} ", v[i].a_, v[i].c_);
     printf("\n");
 }
-

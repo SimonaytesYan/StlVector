@@ -1,13 +1,10 @@
 #pragma once
 
-#include <string.h>
 #include <assert.h>
+#include <string.h>
 
 #include "VectorIterator.hpp"
 #include "DefaultVectorAllocator.hpp"
-
-// TODO add concept for allocator
-// TODO add emplace_back
 
 template<class T>
 static void Swap(T& a, T& b)
