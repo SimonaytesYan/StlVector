@@ -4,6 +4,7 @@
 #include <assert.h>
 
 #include "VectorIterator.hpp"
+#include "DefaultVectorAllocator.hpp"
 
 template <class T>
 class Vector
@@ -193,6 +194,7 @@ public:
         // TODO Аналогично с Erase(Iter)
         size_ -= shift;
     }
+
 //========================ITERATORS================================
 
     iterator Begin()

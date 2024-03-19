@@ -35,6 +35,8 @@ void Test28();
 void Test29();
 void Test30();
 void Test31();
+void Test32();
+void Test33();
 
 #define RUN_TEST(test_num)     \
     PrintTestNum();            \
@@ -73,6 +75,8 @@ int main()
     RUN_TEST(29);
     RUN_TEST(30);
     RUN_TEST(31);
+    RUN_TEST(32);
+    RUN_TEST(33);
 }
 
 void PrintTestNum()
@@ -428,6 +432,7 @@ void Test29()
     v.DumpToSize();
 }
 
+// Test reverse_iterator 1
 void Test30()
 {
     Vector<int> v(5);
@@ -438,6 +443,7 @@ void Test30()
     v.DumpToSize();
 }
 
+// Test reverse_iterator 2
 void Test31()
 {
     Vector<int> v(5);
@@ -447,4 +453,52 @@ void Test31()
     for (auto it = v.RBegin(); it != v.REnd(); ++it)
         printf("%d ", *it);
     printf("\n");
+}
+
+// Test allocator 1
+void Test32()
+{
+    DefaultVectorAllocator<int> alloc;
+
+    int* array = alloc.allocate(10); 
+
+    for (int i = 0; i < 10; i++)
+    {
+        array[i] = i + 1;
+        printf("%d ", array[i]);
+    }
+    printf("\n");
+
+    alloc.deallocate(array, 10);
+}
+
+// Test allocator 2
+struct A
+{
+    A(int a, char c)
+    {
+        a_ = a;
+        c_ = c;
+    }
+
+    A(const A&) = default; 
+
+    int  a_;
+    char c_;
+};
+
+void Test33()
+{
+    DefaultVectorAllocator<A> alloc;
+
+    A* array = alloc.allocate(2);
+    alloc.construct<int, char>(array, -1, 'c');
+
+    alloc.construct(array + 1, array[0]);
+
+    for (int i = 0; i < 2; i++) 
+    {
+        printf("array[%d].a = %d\n", i, array[i].a_);
+        printf("array[%d].c = %c\n", i, array[i].c_);
+    }
 }
