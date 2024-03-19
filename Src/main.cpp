@@ -291,7 +291,7 @@ void Test18()
     for (size_t i = 0; i < v.Size(); i++)
         v[i] = (int)(i + 1);
 
-    v.Insert(v.Begin(), -1);
+    v.Insert(v.Begin() + 1, -1);
     v.DumpToSize();
 }
 

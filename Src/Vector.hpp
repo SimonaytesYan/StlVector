@@ -9,6 +9,14 @@
 // TODO add concept for allocator
 // TODO add emplace_back
 
+template<class T>
+static void Swap(T& a, T& b)
+{
+    T c = a;
+    a = b;
+    b = c;
+}
+
 template <class T, class Allocator = DefaultVectorAllocator<T>>
 class Vector
 {
@@ -163,19 +171,7 @@ public:
 
     void Insert(const iterator& iterator, const value_type& value)
     {
-        assert(Begin() <= iterator && iterator <= End());
-
-        size_type index = size_type(&(*iterator) - buffer_);
-
-         if (size_ == capacity_)
-             Realloc();
- 
-        allocator_.construct(&buffer_[size_], buffer_[size_ - 1]);
-        for (size_type i = size_ - 1; i > index; i--)
-            buffer_[i] = buffer_[i - 1];
-        size_++;
-
-        buffer_[index] = value;
+        ShiftRight(iterator, value);
     }
 
     void Erase(const iterator& iterator)
@@ -209,14 +205,11 @@ public:
         size_ -= shift;
     }
 
-    // template<class... Args>
-    // iterator Emplace(const_iterator pos, Args&&... args)
-    // {
-    //     assert(Begin() < pos && pos <= End());
-
-    //     allocator_.c
-        
-    // }
+    template<class... Args>
+    iterator Emplace(const_iterator pos, Args&&... args)
+    {
+        ShiftRight(pos, args...);
+    }
 
 //========================ITERATORS================================
 
@@ -290,10 +283,24 @@ private:
         buffer_   = new_buffer;
     }
 
-    // void ShiftRight(const iterator& iterator)
-    // {
+    // Shift all elements righter const_pos to one position and construct object on position before 
+    template<class ...Args>
+    void ShiftRight(const iterator& const_pos, Args ...arg)
+    {
+        assert(Begin() < const_pos && const_pos <= End());
+        
+        size_type index = const_pos - Begin() - 1;
 
-    // }
+        if (size_ == capacity_)
+             Realloc();
+        
+        iterator pos = Begin() + index;
+ 
+        allocator_.construct(&buffer_[size_], arg...);
+        for (auto it = End() - 1; it > pos; it--)
+            Swap(*it, *(it - 1));
+        size_++;
+    }
 
 private:
     const size_type kExpansionCoeff = 2;
@@ -304,11 +311,3 @@ private:
     Allocator   allocator_; 
     value_type* buffer_;
 };
-
-template<class T>
-static void Swap(T& a, T& b)
-{
-    T c = a;
-    a = b;
-    b = c;
-}
