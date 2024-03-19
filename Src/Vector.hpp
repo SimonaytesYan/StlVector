@@ -6,6 +6,9 @@
 #include "VectorIterator.hpp"
 #include "DefaultVectorAllocator.hpp"
 
+// TODO add concept for allocator
+// TODO add emplace_back
+
 template <class T, class Allocator = DefaultVectorAllocator<T>>
 class Vector
 {
@@ -27,33 +30,37 @@ public:
 
 //=====================CONSTRUCTORS================================
     Vector(size_type size = 0) :
-    size_     (size),
-    capacity_ (size),
-    buffer_   (allocator.allocate(size))
+    size_      (size),
+    capacity_  (size),
+    allocator_ (),
+    buffer_    (allocator_.allocate(size))
     { }
 
     Vector(size_type size, const value_type& value) :
-    size_     (size),
-    capacity_ (size),
-    buffer_   (allocator.allocate(size))
+    size_      (size),
+    capacity_  (size),
+    allocator_ (),
+    buffer_    (allocator_.allocate(size))
     {
         for (size_type i = 0; i < size; i++)
-            allocator.construct(&buffer_[i], value);
+            allocator_.construct(&buffer_[i], value);
     }
 
     Vector(const Vector<T>& other) :
-    size_     (other.size),
-    capacity_ (other.capacity),
-    buffer_   (allocator.allocate(capacity_))
+    size_      (other.size),
+    capacity_  (other.capacity),
+    allocator_ (),
+    buffer_    (allocator_.allocate(capacity_))
     {
         for (int i = 0; i < size_; i++)
-            allocator.construct(&buffer_[i], other.buffer_[i]);
+            allocator_.construct(&buffer_[i], other.buffer_[i]);
     }
 
     Vector(Vector&& other) :
-    size_     (other.size_),
-    capacity_ (other.capacity_),
-    buffer_   (nullptr)
+    size_      (other.size_),
+    capacity_  (other.capacity_),
+    allocator_ (),
+    buffer_    (nullptr)
     {  Swap(other.buffer_, buffer_); }
 
 //=========================OPERATORS===============================
@@ -63,10 +70,10 @@ public:
         size_     = other.size_;
         capacity_ = other.capacity_;
 
-        allocator.deallocate(buffer_, old_capacity);
-        buffer_ = allocator.allocate(capacity_);
+        allocator_.deallocate(buffer_, old_capacity);
+        buffer_ = allocator_.allocate(capacity_);
         for (size_type i = 0; i < size_; i++)
-            allocator.construct(&buffer_[i], other.buffer_[i]);
+            allocator_.construct(&buffer_[i], other.buffer_[i]);
         
         return *this;
     }
@@ -115,7 +122,7 @@ public:
         if (size_ == capacity_)
             Realloc();
 
-        allocator.construct(&buffer_[size_], value);
+        allocator_.construct(&buffer_[size_], value);
         size_++;
     }
 
@@ -143,7 +150,7 @@ public:
         if (size_ < new_size)
         {
             for (size_type i = size_; i < new_size; i++)
-                allocator.construct(&buffer_[i], value);
+                allocator_.construct(&buffer_[i], value);
         }
         size_ = new_size;
     }
@@ -158,12 +165,12 @@ public:
     {
         assert(Begin() <= iterator && iterator <= End());
 
-        size_type index = &(*iterator) - buffer_;
+        size_type index = size_type(&(*iterator) - buffer_);
 
          if (size_ == capacity_)
              Realloc();
  
-        allocator.construct(&buffer_[size_], buffer_[size_ - 1]);
+        allocator_.construct(&buffer_[size_], buffer_[size_ - 1]);
         for (size_type i = size_ - 1; i > index; i--)
             buffer_[i] = buffer_[i - 1];
         size_++;
@@ -175,31 +182,41 @@ public:
     {
         assert(Begin() <= iterator && iterator < End());
 
-        size_type index = iterator - Begin();
+        size_type index = size_type(iterator - Begin());
         size_--;
 
         for (size_type i = index; i < size_; i++)
             buffer_[i] = buffer_[i + 1];
-        allocator.destruct(&buffer_[size_]);
+        allocator_.destruct(&buffer_[size_]);
     }
 
     void Erase(const iterator& it1, const iterator& it2)
     {
         assert(Begin() <= it1 && it1 < End());
         assert(Begin() <= it2 && it2 <= End());
+        assert(it1 <= it2);
 
-        size_type start = it1 - Begin();
-        size_type shift = it2 - it1;
-        size_type end   = End() - it2;
+        size_type start = size_type(it1 - Begin());
+        size_type shift = size_type(it2 - it1);
+        size_type end   = size_type(End() - it2);
 
         for (size_type index = start; index < end; index++)
             buffer_[index] = buffer_[index + shift];
 
         for (size_type index = end; index < size_; index++)
-            allocator.destruct(&buffer_[index]);
+            allocator_.destruct(&buffer_[index]);
 
         size_ -= shift;
     }
+
+    // template<class... Args>
+    // iterator Emplace(const_iterator pos, Args&&... args)
+    // {
+    //     assert(Begin() < pos && pos <= End());
+
+    //     allocator_.c
+        
+    // }
 
 //========================ITERATORS================================
 
@@ -231,8 +248,8 @@ public:
     ~Vector()
     {
         for (size_type i = 0; i < size_; i++)
-            allocator.destruct(&buffer_[i]);
-        allocator.deallocate(buffer_, capacity_);
+            allocator_.destruct(&buffer_[i]);
+        allocator_.deallocate(buffer_, capacity_);
     }
 
     void DumpToSize()
@@ -260,18 +277,23 @@ private:
 
     void Realloc(size_type new_capacity)
     {
-        value_type* new_buffer = allocator.allocate(new_capacity);
+        value_type* new_buffer = allocator_.allocate(new_capacity);
         
         for (size_type i = 0; i < size_; i++)
-            allocator.construct(&new_buffer[i], buffer_[i]);
+            allocator_.construct(&new_buffer[i], buffer_[i]);
         
         for (size_type i = 0; i < size_; i++)
-            allocator.destruct(&buffer_[i]);
-        allocator.deallocate(buffer_, capacity_);
+            allocator_.destruct(&buffer_[i]);
+        allocator_.deallocate(buffer_, capacity_);
 
         capacity_ = new_capacity;
         buffer_   = new_buffer;
     }
+
+    // void ShiftRight(const iterator& iterator)
+    // {
+
+    // }
 
 private:
     const size_type kExpansionCoeff = 2;
@@ -279,9 +301,8 @@ private:
 
     size_type   size_;
     size_type   capacity_;
+    Allocator   allocator_; 
     value_type* buffer_;
-
-    Allocator allocator; 
 };
 
 template<class T>

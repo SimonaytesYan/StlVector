@@ -83,7 +83,7 @@ void PrintTestNum()
 {
     static size_t test_cnt = 0;
     fprintf(stderr, "======================================\n");
-    fprintf(stderr, "TEST %llu\n", ++test_cnt);
+    fprintf(stderr, "TEST %zu\n", ++test_cnt);
     fprintf(stderr, "+++++++\n");
 }
 
@@ -91,8 +91,8 @@ void PrintTestNum()
 void Test1()
 {
     Vector<int> v(10);
-    for (int i = 0; i < 10; i++)
-        v[i] = 10 - i;
+    for (size_t i = 0; i < 10; i++)
+        v[i] = 10 - (int)i;
 
     v.DumpToSize();
 }
@@ -116,8 +116,8 @@ void Test2()
 void Test3()
 {
     Vector<int> v(10);
-    for (int i = 0; i < 10; i++)
-        v[i] = i;
+    for (size_t i = 0; i < 10; i++)
+        v[i] = (int)i;
     
     v.Front() = -1;
     v.Back()  = 100;
@@ -128,11 +128,11 @@ void Test3()
 void Test4()
 {
     Vector<int> v1(10);
-    fprintf(stderr, "size     = %d\n", v1.Size());
-    fprintf(stderr, "capacity = %d\n", v1.Capacity());
+    fprintf(stderr, "size     = %zu\n", v1.Size());
+    fprintf(stderr, "capacity = %zu\n", v1.Capacity());
 
     Vector<int> v2(100);
-    fprintf(stderr, "size = %d\n", v2.Size());
+    fprintf(stderr, "size = %zu\n", v2.Size());
 }
 
 // Test empty
@@ -193,10 +193,10 @@ void Test10()
 {
     Vector<int> v(0);
 
-    for (int i = 1; i <= 10; i++)
-        v.PushBack(i);
+    for (size_t i = 1; i <= 10; i++)
+        v.PushBack((int)i);
     
-    for (int i = 0; i < 5; i++)
+    for (size_t i = 0; i < 5; i++)
     {
         fprintf(stderr, "Back = %d\n", v.Back());
         v.PopBack();
@@ -211,15 +211,15 @@ void Test11()
 {
     Vector<int> v(1);
     v.Clear();
-    fprintf(stderr, "size = %d\ncap  = %d\n", v.Size(), v.Capacity());   
+    fprintf(stderr, "size = %zu\ncap  = %zu\n", v.Size(), v.Capacity());   
 }
 
 // Test Resize 1
 void Test12()
 {
     Vector<int> v(10);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     v.Resize(10);
     v.DumpToSize();
@@ -230,8 +230,8 @@ void Test12()
 void Test13()
 {
     Vector<int> v(10);
-    for (int i = 0; i < 10; i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < 10; i++)
+        v[i] = (int)(i + 1);
 
     v.Resize(5);
     v.DumpToSize();
@@ -242,8 +242,8 @@ void Test13()
 void Test14()
 {
     Vector<int> v(5);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     v.Resize(10, -1);
     v.DumpToSize();
@@ -254,8 +254,8 @@ void Test14()
 void Test15()
 {
     Vector<int> v(5);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     v.Reserve(10);
     v.DumpToSize();
@@ -266,8 +266,8 @@ void Test15()
 void Test16()
 {
     Vector<int> v(10);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     v.Reserve(5);
     v.DumpToSize();
@@ -277,7 +277,7 @@ void Test16()
 void Test17()
 {
     Vector<int> v(5);
-    for (int i = 0; i < v.Size(); i++)
+    for (size_t i = 0; i < v.Size(); i++)
         v[i] = rand() % 100;
 
     std::sort(v.Begin(), v.End());
@@ -288,8 +288,8 @@ void Test17()
 void Test18()
 {
     Vector<int> v(5);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     v.Insert(v.Begin(), -1);
     v.DumpToSize();
@@ -299,8 +299,8 @@ void Test18()
 void Test19()
 {
     Vector<int> v(5);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     auto it = v.End();
 
@@ -312,8 +312,8 @@ void Test19()
 void Test20()
 {
     Vector<int> v(5);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     auto it = v.Begin();
     it += 3;
@@ -326,8 +326,8 @@ void Test20()
 void Test21()
 {
     Vector<int> v(5);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     auto it = v.Begin();
     v.Erase(it);
@@ -338,8 +338,8 @@ void Test21()
 void Test22()
 {
     Vector<int> v(5);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     auto it = v.End() - 1;
     v.Erase(it);
@@ -350,8 +350,8 @@ void Test22()
 void Test23()
 {
     Vector<int> v(5);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     auto it = v.End() - 3;
     v.Erase(it);
@@ -371,8 +371,8 @@ void Test24()
 void Test25()
 {
     Vector<int> v(5);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     auto start = v.Begin();
     auto end   = v.End();
@@ -384,8 +384,8 @@ void Test25()
 void Test26()
 {
     Vector<int> v(10);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     auto start = v.Begin() + 1;
     auto end   = v.End()   - 2;
@@ -397,8 +397,8 @@ void Test26()
 void Test27()
 {
     Vector<int> v(10);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     auto start = v.Begin() + 6;
     auto end   = v.End() - 1;
@@ -410,8 +410,8 @@ void Test27()
 void Test28()
 {
     Vector<int> v(10);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     auto start = v.Begin();
     auto end   = v.Begin();
@@ -423,8 +423,8 @@ void Test28()
 void Test29()
 {
     Vector<int> v(10);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     auto start = v.Begin();
     auto end   = v.Begin() + 1;
@@ -436,7 +436,7 @@ void Test29()
 void Test30()
 {
     Vector<int> v(5);
-    for (int i = 0; i < v.Size(); i++)
+    for (size_t i = 0; i < v.Size(); i++)
         v[i] = rand() % 100;
 
     std::sort(v.RBegin(), v.REnd());
@@ -447,8 +447,8 @@ void Test30()
 void Test31()
 {
     Vector<int> v(5);
-    for (int i = 0; i < v.Size(); i++)
-        v[i] = i + 1;
+    for (size_t i = 0; i < v.Size(); i++)
+        v[i] = (int)(i + 1);
 
     for (auto it = v.RBegin(); it != v.REnd(); ++it)
         printf("%d ", *it);
@@ -462,9 +462,9 @@ void Test32()
 
     int* array = alloc.allocate(10); 
 
-    for (int i = 0; i < 10; i++)
+    for (size_t i = 0; i < 10; i++)
     {
-        array[i] = i + 1;
+        array[i] = (int)(i + 1);
         printf("%d ", array[i]);
     }
     printf("\n");
@@ -475,11 +475,10 @@ void Test32()
 // Test allocator 2
 struct A
 {
-    A(int a, char c)
-    {
-        a_ = a;
-        c_ = c;
-    }
+    A(int a, char c) :
+    a_ (a),
+    c_ (c)
+    { }
 
     A(const A&) = default; 
 
@@ -496,10 +495,10 @@ void Test33()
 
     alloc.construct(array + 1, array[0]);
 
-    for (int i = 0; i < 2; i++) 
+    for (size_t i = 0; i < 2; i++) 
     {
-        printf("array[%d].a = %d\n", i, array[i].a_);
-        printf("array[%d].c = %c\n", i, array[i].c_);
+        printf("array[%zu].a = %d\n", i, array[i].a_);
+        printf("array[%zu].c = %c\n", i, array[i].c_);
     }
 
     alloc.deallocate(array, 2);
