@@ -18,9 +18,9 @@ public:
     using reference       = T&;
 
     using iterator               = VectorIterator<T>;
-    using const_iterator         = VectorIterator<const T>; // ?
-    // using reverse_iterator       = VectorReverseIterator<T>;
-    // using const_reverse_iterator = VectorReverseIterator<const T>; // ?
+    using const_iterator         = VectorIterator<const T>;
+    using reverse_iterator       = VectorReverseIterator<T>;
+    using const_reverse_iterator = VectorReverseIterator<const T>;
 
 //=====================CONSTRUCTORS================================
     Vector(size_type size = 0) :
@@ -150,12 +150,6 @@ public:
             Realloc(new_capacity);
     }
 
-    iterator Begin()
-    { return iterator(buffer_); }
-
-    iterator End()
-    { return iterator(buffer_ + size_); }
-
     void Insert(const iterator& iterator, const value_type& new_elem)
     {
         assert(Begin() <= iterator && iterator <= End());
@@ -191,13 +185,39 @@ public:
 
         size_type start = it1 - Begin();
         size_type shift = it2 - it1;
+        size_type end   = End() - it2;
 
-        for (size_type index = start; index < start + (size_ - shift); index++)
+        for (size_type index = start; index < end; index++)
             buffer_[index] = buffer_[index + shift];
 
         // TODO Аналогично с Erase(Iter)
         size_ -= shift;
     }
+//========================ITERATORS================================
+
+    iterator Begin()
+    { return iterator(buffer_); }
+
+    iterator End()
+    { return iterator(buffer_ + size_); }
+
+    const_iterator CBegin()
+    { return const_iterator(buffer_); }
+
+    const_iterator CEnd()
+    { return const_iterator(buffer_ + size_); }
+
+    reverse_iterator RBegin()
+    { return reverse_iterator(buffer_ + size_ - 1); }
+
+    reverse_iterator REnd()
+    { return reverse_iterator(buffer_ - 1); }
+
+    reverse_iterator CRBegin()
+    { return const_reverse_iterator(buffer_ + size_ - 1); }
+
+    reverse_iterator CREnd()
+    { return const_reverse_iterator(buffer_ - 1); }
 
 //========================DESTRUCTOR===============================
     ~Vector()

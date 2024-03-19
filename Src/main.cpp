@@ -33,6 +33,8 @@ void Test26();
 void Test27();
 void Test28();
 void Test29();
+void Test30();
+void Test31();
 
 #define RUN_TEST(test_num)     \
     PrintTestNum();            \
@@ -69,6 +71,8 @@ int main()
     RUN_TEST(27);
     RUN_TEST(28);
     RUN_TEST(29);
+    RUN_TEST(30);
+    RUN_TEST(31);
 }
 
 void PrintTestNum()
@@ -422,4 +426,25 @@ void Test29()
     auto end   = v.Begin() + 1;
     v.Erase(start, end);
     v.DumpToSize();
+}
+
+void Test30()
+{
+    Vector<int> v(5);
+    for (int i = 0; i < v.Size(); i++)
+        v[i] = rand() % 100;
+
+    std::sort(v.RBegin(), v.REnd());
+    v.DumpToSize();
+}
+
+void Test31()
+{
+    Vector<int> v(5);
+    for (int i = 0; i < v.Size(); i++)
+        v[i] = i + 1;
+
+    for (auto it = v.RBegin(); it != v.REnd(); ++it)
+        printf("%d ", *it);
+    printf("\n");
 }

@@ -99,6 +99,105 @@ private:
     T* iter_;
 };
 
-// const iterator
-// reverse iterator
-// const reverse iterator
+
+template<class T>
+class VectorReverseIterator
+{
+public:
+    using iterator_category = std::random_access_iterator_tag;
+
+    using value_type      = T;
+    using difference_type = std::ptrdiff_t; 
+    using pointer         = T*;
+    using reference       = T&;
+
+    VectorReverseIterator() :
+    iter_ (nullptr)
+    { }
+
+    VectorReverseIterator(T* ptr) :
+    iter_ (ptr)
+    { }
+
+    VectorReverseIterator(const VectorReverseIterator<T>& other) = default;
+    VectorReverseIterator& operator=(const VectorReverseIterator<T>& other) = default;
+
+    T& operator*()
+    { return *iter_; }
+
+    const T& operator*() const
+    { return *iter_; }
+
+    difference_type operator-(const VectorIterator<T>& other) const
+    { return other.iter_ - VectorIterator<T>::iter_; }
+
+    VectorReverseIterator operator+(difference_type value) const
+    { return iter_ - value; }
+    
+    VectorReverseIterator operator-(difference_type value) const
+    { return iter_ + value; }
+
+    VectorReverseIterator& operator+=(difference_type value)
+    {
+        iter_ -= value;
+        return *this;
+    }
+
+    VectorReverseIterator& operator-=(difference_type value)
+    {
+        iter_ += value;
+        return *this;
+    }
+
+    VectorReverseIterator& operator++()
+    { 
+        iter_--;
+        return *this;
+    }
+
+    VectorReverseIterator operator++(int)
+    {
+        VectorReverseIterator old_iter = *this;
+        operator++();
+        
+        return old_iter;
+    }
+
+    VectorReverseIterator& operator--()
+    { 
+        iter_++;
+        return *this;
+    }
+
+    VectorReverseIterator operator--(int)
+    {
+        VectorReverseIterator old_iter = *this;
+        operator--();
+        
+        return old_iter;
+    }
+    
+    difference_type operator-(const VectorReverseIterator<T>& other) const
+    { return iter_ - other.iter_; }
+
+    bool operator==(const VectorReverseIterator& other) const
+    { return iter_ == other.iter_; }
+
+    bool operator!=(const VectorReverseIterator& other) const
+    { return iter_ != other.iter_; }
+
+    bool operator<(const VectorReverseIterator& other) const
+    { return (iter_ > other.iter_); }
+
+    bool operator>(const VectorReverseIterator& other) const
+    { return (iter_ < other.iter_); }
+
+    bool operator<=(const VectorReverseIterator& other) const
+    { return (iter_ >= other.iter_); }
+
+    bool operator>=(const VectorReverseIterator& other) const
+    { return (iter_ <= other.iter_); }
+
+private:
+    T* iter_;
+};
