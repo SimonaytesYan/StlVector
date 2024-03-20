@@ -30,9 +30,7 @@ public:
 
     template <class ...Args>
     void construct(pointer ptr, Args... args)
-    {
-        ::new((void*)ptr) value_type(args...);
-    }
+    { ::new((void*)ptr) value_type(args...); }
     
     void destruct(pointer ptr)
     { ptr->~value_type(); }

@@ -598,7 +598,11 @@ void Test39()
     Vector<int> v(5);
     for (size_t i = 0; i < v.Size(); i++)
         v[i] = rand() % 100;
+    
+    v.DumpToSize();
+    STLVectorDecor<int> stl_v(v);
 
-    std::sort(v.Begin(), v.End());
+    std::sort(stl_v.begin(), stl_v.end());
+    
     v.DumpToSize();
 }
