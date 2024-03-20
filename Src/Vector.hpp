@@ -144,6 +144,18 @@ public:
     {
         if (capacity_ < new_size)
             Realloc(new_size);
+        
+        if (size_ < new_size)
+        {
+            for (size_type i = size_; i < new_size; i++)
+                allocator_.construct(&buffer_[i]);
+        }
+        else if (size_ > new_size)
+        {
+            for (size_t i = new_size; i < size_; i++)
+                allocator_.destruct(&buffer_[i]);
+        }
+        
         size_ = new_size;
     }
 
@@ -155,8 +167,14 @@ public:
         if (size_ < new_size)
         {
             for (size_type i = size_; i < new_size; i++)
-                allocator_.construct(&buffer_[i], value);
+                allocator_.construct(&buffer_[i]);
         }
+        else if (size_ > new_size)
+        {
+            for (size_t i = new_size; i < size_; i++)
+                allocator_.destruct(&buffer_[i]);
+        }
+
         size_ = new_size;
     }
 
@@ -191,12 +209,12 @@ public:
 
         size_type start = size_type(it1 - Begin());
         size_type shift = size_type(it2 - it1);
-        size_type end   = size_type(End() - it2);
+        size_type end_ind   = size_type(End() - it2);
 
-        for (size_type index = start; index < end; index++)
+        for (size_type index = start; index < end_ind; index++)
             buffer_[index] = buffer_[index + shift];
 
-        for (size_type index = end; index < size_; index++)
+        for (size_type index = end_ind; index < size_; index++)
             allocator_.destruct(&buffer_[index]);
 
         size_ -= shift;
