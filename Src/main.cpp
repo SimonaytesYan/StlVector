@@ -4,10 +4,11 @@
 #include "Vector.hpp"
 #include "VectorDecor.hpp"
 
-using type = long long;
+using type = int;
 
-// #define TEST_STL
-#define TEST_VECTOR
+#define TEST_STL
+// #define TEST_VECTOR
+// #define TEST_SFINAE
 
 void PrintTestNum(size_t test_num);
 void Test1();
@@ -49,6 +50,7 @@ void Test36();
 void Test37();
 void Test38();
 void Test39();
+void Test0();
 
 #define RUN_TEST(test_num)     \
     PrintTestNum(test_num);    \
@@ -56,6 +58,10 @@ void Test39();
 
 int main()
 {
+    #ifdef TEST_SFINAE
+        RUN_TEST(0);
+    #endif
+
     #ifdef TEST_VECTOR
         RUN_TEST(1);
         RUN_TEST(2);
@@ -108,6 +114,17 @@ void PrintTestNum(size_t test_num)
     fprintf(stderr, "======================================\n");
     fprintf(stderr, "TEST %zu\n", test_num);
     fprintf(stderr, "+++++++\n");
+}
+
+struct B {
+    int a[10];
+};
+
+void Test0()
+{
+    Vector<int>       v1(10); 
+    Vector<long long> v2(10); 
+    Vector<B>         v3(10); 
 }
 
 // Test simple constructor and operator[]

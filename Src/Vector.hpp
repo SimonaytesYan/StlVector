@@ -2,7 +2,7 @@
 
 #include "BasicVector.hpp"
 
-CREATE_PREDICATE((sizeof(U) <= sizeof(int)), ComplexObject);
+CREATE_PREDICATE((sizeof(U) > sizeof(int)), ComplexObject);
 
 // Vector for not complex objects
 template <typename T, typename Allocator = DefaultVectorAllocator<T>, typename Checker = void>
@@ -165,31 +165,31 @@ public:
     Vector(const BasicVector<T, Allocator>& basic_vector) :
     BasicVector<T, Allocator>(basic_vector)
     {
-        printf("Complex Vector\n");
+        printf("Complex Vector(sizeof(T) = %d)\n", sizeof(T));
     }
 
     Vector(size_type size = 0) :
     BasicVector<T, Allocator>(size)
     { 
-        printf("Complex Vector\n");
+        printf("Complex Vector(sizeof(T) = %d)\n", sizeof(T));
     }
 
     Vector(size_type size, const value_type& value) :
     BasicVector<T, Allocator>(size, value)
     { 
-        printf("Complex Vector\n");
+        printf("Complex Vector(sizeof(T) = %d)\n", sizeof(T));
     }
 
     Vector(const Vector<T>& other) :
     BasicVector<T, Allocator>(other)
     { 
-        printf("Complex Vector\n");
+        printf("Complex Vector(sizeof(T) = %d)\n", sizeof(T));
     }
 
     Vector(Vector&& other) :
     BasicVector<T, Allocator>(other)
     { 
-        printf("Complex Vector\n");
+        printf("Complex Vector(sizeof(T) = %d)\n", sizeof(T));
     }
 
 //===============================OPERATOR================================
