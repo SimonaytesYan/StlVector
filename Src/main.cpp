@@ -4,6 +4,8 @@
 #include "Vector.hpp"
 #include "VectorDecor.hpp"
 
+using type = long long;
+
 // #define TEST_STL
 #define TEST_VECTOR
 
@@ -111,9 +113,9 @@ void PrintTestNum(size_t test_num)
 // Test simple constructor and operator[]
 void Test1()
 {
-    Vector<int> v(10);
+    Vector<type> v(10);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = 10 - (int)i;
+        v[i] = 10 - (type)i;
 
     v.DumpToSize();
 }
@@ -121,10 +123,10 @@ void Test1()
 // Test Front and Back 1
 void Test2()
 {
-    Vector<int> v(1);
+    Vector<type> v(1);
 
-    int& front = v.Front();
-    int& back  = v.Back();
+    type& front = v.Front();
+    type& back  = v.Back();
 
     front = -1;
     fprintf(stderr, "v[0] = %d\n", v[0]);
@@ -136,9 +138,9 @@ void Test2()
 // Test Front and Back 2
 void Test3()
 {
-    Vector<int> v(10);
+    Vector<type> v(10);
     for (size_t i = 0; i < 10; i++)
-        v[i] = (int)i;
+        v[i] = (type)i;
     
     v.Front() = -1;
     v.Back()  = 100;
@@ -148,28 +150,28 @@ void Test3()
 // Test size
 void Test4()
 {
-    Vector<int> v1(10);
+    Vector<type> v1(10);
     fprintf(stderr, "size     = %zu\n", v1.Size());
     fprintf(stderr, "capacity = %zu\n", v1.Capacity());
 
-    Vector<int> v2(100);
+    Vector<type> v2(100);
     fprintf(stderr, "size = %zu\n", v2.Size());
 }
 
 // Test empty
 void Test5()
 {
-    Vector<int> v1(0);
+    Vector<type> v1(0);
     fprintf(stderr, "empty = %d\n", v1.Empty());
     
-    Vector<int> v2(2);
+    Vector<type> v2(2);
     fprintf(stderr, "empty = %d\n", v2.Empty());
 }
 
 // Test push_back 1
 void Test6()
 {
-    Vector<int> v(3, 2);
+    Vector<type> v(3, 2);
     v.PushBack(-1);
     v.DumpToSize();
     v.DumpToCap();
@@ -178,7 +180,7 @@ void Test6()
 // Test push_back 2
 void Test7()
 {
-    Vector<int> v(0);
+    Vector<type> v(0);
     v.PushBack(100);
 
     v.DumpToSize();
@@ -188,7 +190,7 @@ void Test7()
 // Test push_back 3
 void Test8()
 {
-    Vector<int> v(0);
+    Vector<type> v(0);
     v.PushBack(-1);
     v.PushBack(-2);
     v.PushBack(-3);
@@ -201,7 +203,7 @@ void Test8()
 // Test pop_back 1
 void Test9()
 {
-    Vector<int> v(1, 10);
+    Vector<type> v(1, 10);
     v.PopBack();
     v.PopBack();
 
@@ -212,10 +214,10 @@ void Test9()
 // Test pop_back 2
 void Test10()
 {
-    Vector<int> v(0);
+    Vector<type> v(0);
 
     for (size_t i = 1; i <= 10; i++)
-        v.PushBack((int)i);
+        v.PushBack((type)i);
     
     for (size_t i = 0; i < 5; i++)
     {
@@ -230,7 +232,7 @@ void Test10()
 // Test clear
 void Test11()
 {
-    Vector<int> v(1);
+    Vector<type> v(1);
     v.Clear();
     fprintf(stderr, "size = %zu\ncap  = %zu\n", v.Size(), v.Capacity());   
 }
@@ -238,9 +240,9 @@ void Test11()
 // Test Resize 1
 void Test12()
 {
-    Vector<int> v(10);
+    Vector<type> v(10);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     v.Resize(10);
     v.DumpToSize();
@@ -250,9 +252,9 @@ void Test12()
 // Test Resize 2
 void Test13()
 {
-    Vector<int> v(10);
+    Vector<type> v(10);
     for (size_t i = 0; i < 10; i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     v.Resize(5);
     v.DumpToSize();
@@ -262,9 +264,9 @@ void Test13()
 // Test Resize 3
 void Test14()
 {
-    Vector<int> v(5);
+    Vector<type> v(5);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     v.Resize(10, -1);
     v.DumpToSize();
@@ -274,9 +276,9 @@ void Test14()
 // Test Reserve 1
 void Test15()
 {
-    Vector<int> v(5);
+    Vector<type> v(5);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     v.Reserve(10);
     v.DumpToSize();
@@ -286,9 +288,9 @@ void Test15()
 // Test Reserve 2
 void Test16()
 {
-    Vector<int> v(10);
+    Vector<type> v(10);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     v.Reserve(5);
     v.DumpToSize();
@@ -297,7 +299,7 @@ void Test16()
 
 void Test17()
 {
-    Vector<int> v(5);
+    Vector<type> v(5);
     for (size_t i = 0; i < v.Size(); i++)
         v[i] = rand() % 100;
 
@@ -308,9 +310,9 @@ void Test17()
 // Test Insert 1
 void Test18()
 {
-    Vector<int> v(5);
+    Vector<type> v(5);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     v.Insert(v.Begin() + 1, -1);
     v.DumpToSize();
@@ -319,9 +321,9 @@ void Test18()
 // Test Insert 2
 void Test19()
 {
-    Vector<int> v(5);
+    Vector<type> v(5);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     auto it = v.End();
 
@@ -332,9 +334,9 @@ void Test19()
 // Test Insert 3
 void Test20()
 {
-    Vector<int> v(5);
+    Vector<type> v(5);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     auto it = v.Begin();
     it += 3;
@@ -346,9 +348,9 @@ void Test20()
 // Test Erase(Iter) 1
 void Test21()
 {
-    Vector<int> v(5);
+    Vector<type> v(5);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     auto it = v.Begin();
     v.Erase(it);
@@ -358,9 +360,9 @@ void Test21()
 // Test Erase(Iter) 2
 void Test22()
 {
-    Vector<int> v(5);
+    Vector<type> v(5);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     auto it = v.End() - 1;
     v.Erase(it);
@@ -370,9 +372,9 @@ void Test22()
 // Test Erase(Iter) 3
 void Test23()
 {
-    Vector<int> v(5);
+    Vector<type> v(5);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     auto it = v.End() - 3;
     v.Erase(it);
@@ -382,7 +384,7 @@ void Test23()
 // Test Erase(Iter) 4
 void Test24()
 {
-    Vector<int> v(1, -1);
+    Vector<type> v(1, -1);
 
     v.Erase(v.Begin());
     v.DumpToSize();
@@ -391,9 +393,9 @@ void Test24()
 // Test Erase(Iter, Iter) 1
 void Test25()
 {
-    Vector<int> v(5);
+    Vector<type> v(5);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     auto start = v.Begin();
     auto End   = v.End();
@@ -404,9 +406,9 @@ void Test25()
 // Test Erase(Iter, Iter) 2
 void Test26()
 {
-    Vector<int> v(10);
+    Vector<type> v(10);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     auto start = v.Begin() + 1;
     auto End   = v.End()   - 2;
@@ -417,9 +419,9 @@ void Test26()
 // Test Erase(Iter, Iter) 3
 void Test27()
 {
-    Vector<int> v(10);
+    Vector<type> v(10);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     auto start = v.Begin() + 6;
     auto End   = v.End() - 1;
@@ -430,9 +432,9 @@ void Test27()
 // Test Erase(Iter, Iter) 4
 void Test28()
 {
-    Vector<int> v(10);
+    Vector<type> v(10);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     auto start = v.Begin();
     auto End   = v.Begin();
@@ -443,9 +445,9 @@ void Test28()
 // Test Erase(Iter, Iter) 5
 void Test29()
 {
-    Vector<int> v(10);
+    Vector<type> v(10);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     auto start = v.Begin();
     auto End   = v.Begin() + 1;
@@ -456,7 +458,7 @@ void Test29()
 // Test reverse_iterator 1
 void Test30()
 {
-    Vector<int> v(5);
+    Vector<type> v(5);
     for (size_t i = 0; i < v.Size(); i++)
         v[i] = rand() % 100;
 
@@ -467,9 +469,9 @@ void Test30()
 // Test reverse_iterator 2
 void Test31()
 {
-    Vector<int> v(5);
+    Vector<type> v(5);
     for (size_t i = 0; i < v.Size(); i++)
-        v[i] = (int)(i + 1);
+        v[i] = (type)(i + 1);
 
     for (auto it = v.RBegin(); it != v.REnd(); ++it)
         fprintf(stderr, "%d ", *it);
@@ -479,13 +481,13 @@ void Test31()
 // Test allocator 1
 void Test32()
 {
-    DefaultVectorAllocator<int> alloc;
+    DefaultVectorAllocator<type> alloc;
 
-    int* array = alloc.allocate(10); 
+    type* array = alloc.allocate(10); 
 
     for (size_t i = 0; i < 10; i++)
     {
-        array[i] = (int)(i + 1);
+        array[i] = (type)(i + 1);
         fprintf(stderr, "%d ", array[i]);
     }
     fprintf(stderr, "\n");
@@ -517,7 +519,7 @@ void Test33()
     DefaultVectorAllocator<A> alloc;
 
     A* array = alloc.allocate(2);
-    alloc.construct<int, char>(array, -1, 'c');
+    alloc.construct<type, char>(array, -1, 'c');
 
     alloc.construct(array + 1, array[0]);
 
@@ -557,27 +559,27 @@ void Test35()
 // Test std::for_each
 void Test36()
 {
-    Vector<int> v1(5);
-    for (int i = 0; i < v1.Size(); i++)
+    Vector<type> v1(5);
+    for (type i = 0; i < v1.Size(); i++)
         v1[i] = i * 2;
         
-    STLVectorDecor<int> stl_v1(v1);
+    STLVectorDecor<type> stl_v1(v1);
 
     std::for_each(stl_v1.cbegin(), stl_v1.cend(), 
-                  [](const int& elem) { fprintf(stderr, "%d ", elem); });
+                  [](const type& elem) { fprintf(stderr, "%d ", elem); });
     fprintf(stderr, "\n");
 }
 
 // Test std::copy
 void Test37()
 {
-    Vector<int> v1(5, 0);
-    Vector<int> v2(5, 0);
-    for (int i = 0; i < v1.Size(); i++)
+    Vector<type> v1(5, 0);
+    Vector<type> v2(5, 0);
+    for (type i = 0; i < v1.Size(); i++)
         v1[i] = i * 2;
 
-    STLVectorDecor<int> stl_v1(v1);
-    STLVectorDecor<int> stl_v2(v2);
+    STLVectorDecor<type> stl_v1(v1);
+    STLVectorDecor<type> stl_v2(v2);
 
     std::copy(stl_v1.begin(), stl_v1.end(), stl_v2.begin());
 
@@ -587,11 +589,11 @@ void Test37()
 // Test range base for
 void Test38()
 {
-    Vector<int> v(5);
-    for (int i = 0; i < v.Size(); i++)
+    Vector<type> v(5);
+    for (type i = 0; i < v.Size(); i++)
         v[i] = (1 << i);
     
-    STLVectorDecor<int> stl_v(v);
+    STLVectorDecor<type> stl_v(v);
 
     for (auto elem : stl_v)
         fprintf(stderr, "%d ", elem);
@@ -601,12 +603,12 @@ void Test38()
 // Test std::sort
 void Test39()
 {
-    Vector<int> v(5);
+    Vector<type> v(5);
     for (size_t i = 0; i < v.Size(); i++)
         v[i] = rand() % 100;
     
     v.DumpToSize();
-    STLVectorDecor<int> stl_v(v);
+    STLVectorDecor<type> stl_v(v);
 
     std::sort(stl_v.begin(), stl_v.end());
     
