@@ -4,8 +4,8 @@
 #include "Vector.hpp"
 #include "VectorDecor.hpp"
 
-#define TEST_STL
-// #define TEST_VECTOR
+// #define TEST_STL
+#define TEST_VECTOR
 
 void PrintTestNum(size_t test_num);
 void Test1();
@@ -98,6 +98,7 @@ int main()
         RUN_TEST(38);
         RUN_TEST(39);
     #endif
+
 }
 
 void PrintTestNum(size_t test_num)
@@ -495,6 +496,11 @@ void Test32()
 // Test allocator 2
 struct A
 {
+    A() :
+    a_ (0),
+    c_ (0)
+    {}
+
     A(int a, char c) :
     a_ (a),
     c_ (c)

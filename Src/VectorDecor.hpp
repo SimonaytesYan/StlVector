@@ -6,8 +6,8 @@ class STLVectorDecor
 public:
 
 //=====================MEMBER TYPES================================
-    using size_type       = typename Vector<T, Allocator> ::size_type;
-    using allocator_type  = typename Vector<T, Allocator> ::allocator_type;
+    using size_type       = typename Vector<T, Allocator>::size_type;
+    using allocator_type  = typename Vector<T, Allocator>::allocator_type;
     using difference_type = std::ptrdiff_t; 
     using value_type      = T;
     using pointer         = typename Allocator::pointer;

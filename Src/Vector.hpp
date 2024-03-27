@@ -1,336 +1,206 @@
 #pragma once
 
-#include <assert.h>
-#include <string.h>
+#include "BasicVector.hpp"
 
-#include "VectorIterator.hpp"
-#include "DefaultVectorAllocator.hpp"
+CREATE_PREDICATE((sizeof(U) <= sizeof(int)), ComplexObject);
 
-template<class T>
-static void Swap(T& a, T& b)
+// Vector for not complex objects
+template <typename T, typename Allocator = DefaultVectorAllocator<T>, typename Checker = void>
+class Vector : public BasicVector<T, Allocator>
 {
-    T c = a;
-    a = b;
-    b = c;
-}
-
-template <class T, class Allocator = DefaultVectorAllocator<T>>
-class Vector
-{
-
 public:
-//=====================MEMBER TYPES================================
-    using size_type       = size_t;
-    using allocator_type  = Allocator;
-    using difference_type = std::ptrdiff_t; 
-    using value_type      = T;
-    using pointer         = typename Allocator::pointer;
-    using const_pointer   = typename Allocator::const_pointer;
-    using reference       = T&;
+    using size_type       = typename BasicVector<T, Allocator>::size_type;
+    using allocator_type  = typename BasicVector<T, Allocator>::allocator_type;
+    using difference_type = typename BasicVector<T, Allocator>::difference_type;
+    using value_type      = typename BasicVector<T, Allocator>::value_type;
+    using pointer         = typename BasicVector<T, Allocator>::pointer;
+    using const_pointer   = typename BasicVector<T, Allocator>::const_pointer;
+    using reference       = typename BasicVector<T, Allocator>::reference;
 
-    using iterator               = VectorIterator<T>;
-    using const_iterator         = VectorIterator<const T>;
-    using reverse_iterator       = VectorReverseIterator<T>;
-    using const_reverse_iterator = VectorReverseIterator<const T>;
+    using iterator               = typename BasicVector<T, Allocator>::iterator;
+    using const_iterator         = typename BasicVector<T, Allocator>::const_iterator;
+    using reverse_iterator       = typename BasicVector<T, Allocator>::reverse_iterator;
+    using const_reverse_iterator = typename BasicVector<T, Allocator>::const_reverse_iterator;
 
-//=====================CONSTRUCTORS================================
+//================================CONSTRUCTORS===========================
+    Vector(const BasicVector<T, Allocator>& basic_vector) :
+    BasicVector<T, Allocator>(basic_vector)
+    { }
+
     Vector(size_type size = 0) :
-    size_      (size),
-    capacity_  (size),
-    allocator_ (),
-    buffer_    (allocator_.allocate(size))
+    BasicVector<T, Allocator>(size)
     { }
 
     Vector(size_type size, const value_type& value) :
-    size_      (size),
-    capacity_  (size),
-    allocator_ (),
-    buffer_    (allocator_.allocate(size))
-    {
-        for (size_type i = 0; i < size; i++)
-            allocator_.construct(&buffer_[i], value);
-    }
+    BasicVector<T, Allocator>(size, value)
+    { }
 
     Vector(const Vector<T>& other) :
-    size_      (other.size),
-    capacity_  (other.capacity),
-    allocator_ (),
-    buffer_    (allocator_.allocate(capacity_))
-    {
-        for (int i = 0; i < size_; i++)
-            allocator_.construct(&buffer_[i], other.buffer_[i]);
-    }
+    BasicVector<T, Allocator>(other)
+    { }
 
     Vector(Vector&& other) :
-    size_      (other.size_),
-    capacity_  (other.capacity_),
-    allocator_ (),
-    buffer_    (nullptr)
-    {  Swap(other.buffer_, buffer_); }
+    BasicVector<T, Allocator>(other)
+    { }
 
-//=========================OPERATORS===============================
+//================================OPERATORS===========================
+    
     Vector<T>& operator=(const Vector<T>& other)
     {
-        size_type old_capacity;
-        size_     = other.size_;
-        capacity_ = other.capacity_;
+        size_type old_capacity = this->capacity_;
+        this->size_                  = other.size_;
+        this->capacity_              = other.capacity_;
 
-        allocator_.deallocate(buffer_, old_capacity);
-        buffer_ = allocator_.allocate(capacity_);
-        for (size_type i = 0; i < size_; i++)
-            allocator_.construct(&buffer_[i], other.buffer_[i]);
+        this->allocator_.deallocate(this->buffer_, old_capacity);
+        this->buffer_ = this->allocator_.allocate(this->capacity_);
+
+        memcpy(this->buffer_, other, sizeof(T) * this->size_);
+        return *this;
+    }
+
+    void Resize(size_type new_size) override
+    {
+        if (this->capacity_ < new_size)
+            Realloc(new_size);        
+        this->size_ = new_size;
+    }
+
+    void Resize(size_type new_size, value_type value) override
+    {
+        if (this->capacity_ < new_size)
+            Realloc(new_size);
+
+        if (this->size_ < new_size)
+        {
+            for (size_type i = this->size_; i < new_size; i++)
+                this->allocator_.construct(&this->buffer_[i]);
+        }
+        else if (this->size_ > new_size)
+        {
+            for (size_t i = new_size; i < this->size_; i++)
+                this->allocator_.destruct(&this->buffer_[i]);
+        }
+
+        this->size_ = new_size;
+    }
+
+    void Erase(const iterator& iterator) override
+    {
+        assert(this->Begin() <= iterator && iterator < this->End());
+
+        size_type index = size_type(iterator - this->Begin());
+        this->size_--;
+
+        for (size_type i = index; i < this->size_; i++)
+            this->buffer_[i] = this->buffer_[i + 1];
+        this->allocator_.destruct(&this->buffer_[this->size_]);
+    }
+
+    void Erase(const iterator& it1, const iterator& it2) override
+    {
+        assert(this->Begin() <= it1 && it1 < this->End());
+        assert(this->Begin() <= it2 && it2 <= this->End());
+        assert(it1 <= it2);
+
+        size_type start = size_type(it1 - this->Begin());
+        size_type shift = size_type(it2 - it1);
+        size_type end_ind   = size_type(this->End() - it2);
+
+        for (size_type index = start; index < end_ind; index++)
+            this->buffer_[index] = this->buffer_[index + shift];
+
+        for (size_type index = end_ind; index < this->size_; index++)
+            this->allocator_.destruct(&this->buffer_[index]);
+
+        this->size_ -= shift;
+    }
+
+//========================DESTRUCTOR===============================
+    ~Vector()
+    { this->allocator_.deallocate(this->buffer_, this->capacity_); }
+
+protected:
+
+    void Realloc(size_type new_capacity) override
+    {
+        value_type* new_buffer = this->allocator_.allocate(new_capacity);
         
+        memcpy(new_buffer, this->buffer_, this->size_ * sizeof(T));
+        this->allocator_.deallocate(this->buffer_, this->capacity_);
+
+        this->capacity_ = new_capacity;
+        this->buffer_   = new_buffer;
+    }
+};
+
+// Vector for complex objects
+template <class T, class Allocator>
+class Vector<T,Allocator, typename EnableIf<ComplexObject<T>::value, void>::type> : public BasicVector<T, Allocator>
+{
+public:
+    using size_type       = typename BasicVector<T, Allocator>::size_type;
+    using allocator_type  = typename BasicVector<T, Allocator>::allocator_type;
+    using difference_type = typename BasicVector<T, Allocator>::difference_type;
+    using value_type      = typename BasicVector<T, Allocator>::value_type;
+    using pointer         = typename BasicVector<T, Allocator>::pointer;
+    using const_pointer   = typename BasicVector<T, Allocator>::const_pointer;
+    using reference       = typename BasicVector<T, Allocator>::reference;
+
+    using iterator               = typename BasicVector<T, Allocator>::iterator;
+    using const_iterator         = typename BasicVector<T, Allocator>::const_iterator;
+    using reverse_iterator       = typename BasicVector<T, Allocator>::reverse_iterator;
+    using const_reverse_iterator = typename BasicVector<T, Allocator>::const_reverse_iterator;
+
+//================================CONSTRUCTORS===========================
+    Vector(const BasicVector<T, Allocator>& basic_vector) :
+    BasicVector<T, Allocator>(basic_vector)
+    { }
+
+    Vector(size_type size = 0) :
+    BasicVector<T, Allocator>(size)
+    { }
+
+    Vector(size_type size, const value_type& value) :
+    BasicVector<T, Allocator>(size, value)
+    { }
+
+    Vector(const Vector<T>& other) :
+    BasicVector<T, Allocator>(other)
+    { }
+
+    Vector(Vector&& other) :
+    BasicVector<T, Allocator>(other)
+    { }
+
+//===============================OPERATOR================================
+    Vector<T>& operator=(const Vector<T>& other)
+    {
+        size_type old_capacity = this->capacity_;
+        this->size_                  = other.size_;
+        this->capacity_              = other.capacity_;
+
+        this->allocator_.deallocate(this->buffer_, old_capacity);
+        this->buffer_ = this->allocator_.allocate(this->capacity_);
+        for (size_type i = 0; i < this->size_; i++)
+            this->allocator_.construct(&this->buffer_[i], other.buffer_[i]);
+
         return *this;
     }
 
     Vector<T>& operator=(Vector<T>&& other)
     {
-        size_     = other.size_;
-        capacity_ = other.capacity_;
-        Swap(other.buffer_, buffer_);
+        this->size_     = other.size_;
+        this->capacity_ = other.capacity_;
+        Swap(other.buffer_, this->buffer_);
         
         return *this;
     }
 
-    value_type& operator[](size_type index)
-    { return buffer_[index]; }
-
-    const value_type& operator[](size_type index) const
-    { return buffer_[index]; }
-
-//=========================GET INFO================================
-    const value_type& Front() const
-    { return buffer_[0]; }
-    
-    value_type& Front()
-    { return buffer_[0]; }
-
-    const value_type& Back() const
-    { return buffer_[size_ - 1]; }
-    
-    value_type& Back()
-    { return buffer_[size_ - 1]; }
-
-    size_type Size() const
-    { return size_; }
-
-    size_type Capacity() const
-    { return capacity_; }
-    
-    bool Empty() const
-    { return size_ == 0; }
-
-//========================CHANGE VECTOR=============================
-
-    void PushBack(const T& value)
-    {
-        if (size_ == capacity_)
-            Realloc();
-
-        allocator_.construct(&buffer_[size_], value);
-        size_++;
-    }
-
-    void PopBack()
-    { 
-        if (size_ > 0)
-            size_--; 
-    }
-
-    void Clear()
-    { size_ = 0; }
-
-    void Resize(size_type new_size)
-    {
-        if (capacity_ < new_size)
-            Realloc(new_size);
-        
-        if (size_ < new_size)
-        {
-            for (size_type i = size_; i < new_size; i++)
-                allocator_.construct(&buffer_[i]);
-        }
-        else if (size_ > new_size)
-        {
-            for (size_t i = new_size; i < size_; i++)
-                allocator_.destruct(&buffer_[i]);
-        }
-        
-        size_ = new_size;
-    }
-
-    void Resize(size_type new_size, value_type value)
-    {
-        if (capacity_ < new_size)
-            Realloc(new_size);
-
-        if (size_ < new_size)
-        {
-            for (size_type i = size_; i < new_size; i++)
-                allocator_.construct(&buffer_[i]);
-        }
-        else if (size_ > new_size)
-        {
-            for (size_t i = new_size; i < size_; i++)
-                allocator_.destruct(&buffer_[i]);
-        }
-
-        size_ = new_size;
-    }
-
-    void Reserve(size_type new_capacity)
-    {
-        if (capacity_ < new_capacity)
-            Realloc(new_capacity);
-    }
-
-    void Insert(const iterator& iterator, const value_type& value)
-    {
-        ShiftRight(iterator, value);
-    }
-
-    void Erase(const iterator& iterator)
-    {
-        assert(Begin() <= iterator && iterator < End());
-
-        size_type index = size_type(iterator - Begin());
-        size_--;
-
-        for (size_type i = index; i < size_; i++)
-            buffer_[i] = buffer_[i + 1];
-        allocator_.destruct(&buffer_[size_]);
-    }
-
-    void Erase(const iterator& it1, const iterator& it2)
-    {
-        assert(Begin() <= it1 && it1 < End());
-        assert(Begin() <= it2 && it2 <= End());
-        assert(it1 <= it2);
-
-        size_type start = size_type(it1 - Begin());
-        size_type shift = size_type(it2 - it1);
-        size_type end_ind   = size_type(End() - it2);
-
-        for (size_type index = start; index < end_ind; index++)
-            buffer_[index] = buffer_[index + shift];
-
-        for (size_type index = end_ind; index < size_; index++)
-            allocator_.destruct(&buffer_[index]);
-
-        size_ -= shift;
-    }
-
-    template<class... Args>
-    iterator Emplace(const iterator& pos, Args&&... args)
-    {
-        size_type index = pos - Begin() - 1;
-        ShiftRight(pos, args...);
-
-        return Begin() + index;
-    }
-
-    template<class... Args>
-    void EmplaceBack(Args&&... args)
-    {
-        ShiftRight(End(), args...);
-    }
-
-//========================ITERATORS================================
-
-    iterator Begin()
-    { return iterator(buffer_); }
-
-    iterator End()
-    { return iterator(buffer_ + size_); }
-
-    const_iterator CBegin()
-    { return const_iterator(buffer_); }
-
-    const_iterator CEnd()
-    { return const_iterator(buffer_ + size_); }
-
-    reverse_iterator RBegin()
-    { return reverse_iterator(buffer_ + size_ - 1); }
-
-    reverse_iterator REnd()
-    { return reverse_iterator(buffer_ - 1); }
-
-    reverse_iterator CRBegin()
-    { return const_reverse_iterator(buffer_ + size_ - 1); }
-
-    reverse_iterator CREnd()
-    { return const_reverse_iterator(buffer_ - 1); }
-
 //========================DESTRUCTOR===============================
     ~Vector()
     {
-        for (size_type i = 0; i < size_; i++)
-            allocator_.destruct(&buffer_[i]);
-        allocator_.deallocate(buffer_, capacity_);
+        for (size_type i = 0; i < this->size_; i++)
+            this->allocator_.destruct(&this->buffer_[i]);
+        this->allocator_.deallocate(this->buffer_, this->capacity_);
     }
-
-    void DumpToSize()
-    {
-        for (size_type i = 0; i < size_; i++)
-            fprintf(stderr, "%d ", buffer_[i]);
-        fprintf(stderr, "\n");
-    }
-
-    void DumpToCap()
-    {
-        for (size_type i = 0; i < capacity_; i++)
-            fprintf(stderr, "%d ", buffer_[i]);
-        fprintf(stderr, "\n");
-    }
-
-private:
-    void Realloc()
-    {
-        size_type new_capacity = capacity_ * kExpansionCoeff;
-        if (new_capacity == 0)
-            new_capacity = kStartLen;
-        Realloc(new_capacity);
-    }
-
-    void Realloc(size_type new_capacity)
-    {
-        value_type* new_buffer = allocator_.allocate(new_capacity);
-        
-        for (size_type i = 0; i < size_; i++)
-            allocator_.construct(&new_buffer[i], buffer_[i]);
-        
-        for (size_type i = 0; i < size_; i++)
-            allocator_.destruct(&buffer_[i]);
-        allocator_.deallocate(buffer_, capacity_);
-
-        capacity_ = new_capacity;
-        buffer_   = new_buffer;
-    }
-
-    // Shift all elements righter const_pos to one position and construct object on position before 
-    template<class ...Args>
-    void ShiftRight(const iterator& const_pos, Args ...arg)
-    {
-        assert(Begin() < const_pos);
-        assert(const_pos <= End());
-        
-        size_type index = const_pos - Begin();
-
-        if (size_ == capacity_)
-            Realloc();
-        
-        allocator_.construct(&buffer_[size_], arg...);
-        for (size_type i = size_; i > index; i--)
-            Swap(buffer_[i], buffer_[i - 1]);
-        size_++;
-    }
-
-private:
-    const size_type kExpansionCoeff = 2;
-    const size_type kStartLen       = 2;
-
-    size_type   size_;
-    size_type   capacity_;
-    Allocator   allocator_; 
-    value_type* buffer_;
 };
