@@ -25,23 +25,33 @@ public:
 //================================CONSTRUCTORS===========================
     Vector(const BasicVector<T, Allocator>& basic_vector) :
     BasicVector<T, Allocator>(basic_vector)
-    { }
+    {
+        printf("Not Complex Vector\n");
+    }
 
     Vector(size_type size = 0) :
     BasicVector<T, Allocator>(size)
-    { }
+    {
+        printf("Not Complex Vector\n");
+    }
 
     Vector(size_type size, const value_type& value) :
     BasicVector<T, Allocator>(size, value)
-    { }
+    {
+        printf("Not Complex Vector\n");
+    }
 
     Vector(const Vector<T>& other) :
     BasicVector<T, Allocator>(other)
-    { }
+    {
+        printf("Not Complex Vector\n");
+    }
 
     Vector(Vector&& other) :
     BasicVector<T, Allocator>(other)
-    { }
+    {
+        printf("Not Complex Vector\n");
+    }
 
 //================================OPERATORS===========================
     
@@ -154,23 +164,33 @@ public:
 //================================CONSTRUCTORS===========================
     Vector(const BasicVector<T, Allocator>& basic_vector) :
     BasicVector<T, Allocator>(basic_vector)
-    { }
+    {
+        printf("Complex Vector\n");
+    }
 
     Vector(size_type size = 0) :
     BasicVector<T, Allocator>(size)
-    { }
+    { 
+        printf("Complex Vector\n");
+    }
 
     Vector(size_type size, const value_type& value) :
     BasicVector<T, Allocator>(size, value)
-    { }
+    { 
+        printf("Complex Vector\n");
+    }
 
     Vector(const Vector<T>& other) :
     BasicVector<T, Allocator>(other)
-    { }
+    { 
+        printf("Complex Vector\n");
+    }
 
     Vector(Vector&& other) :
     BasicVector<T, Allocator>(other)
-    { }
+    { 
+        printf("Complex Vector\n");
+    }
 
 //===============================OPERATOR================================
     Vector<T>& operator=(const Vector<T>& other)
