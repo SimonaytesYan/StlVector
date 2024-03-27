@@ -6,9 +6,9 @@
 
 using type = int;
 
-#define TEST_STL
+// #define TEST_STL
 // #define TEST_VECTOR
-// #define TEST_SFINAE
+#define TEST_SFINAE
 
 void PrintTestNum(size_t test_num);
 void Test1();
@@ -120,11 +120,25 @@ struct B {
     int a[10];
 };
 
+struct C {
+
+    C() :
+    a (0)
+    { }
+
+    C(const C& other)
+    {
+        a = other.a + 10;
+    }
+
+    int a;
+};
+
 void Test0()
 {
-    Vector<int>       v1(10); 
-    Vector<long long> v2(10); 
-    Vector<B>         v3(10); 
+    Vector<int> v1(10); 
+    Vector<B>   v2(10); 
+    Vector<C>   v3(10); 
 }
 
 // Test simple constructor and operator[]

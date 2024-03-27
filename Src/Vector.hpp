@@ -2,7 +2,7 @@
 
 #include "BasicVector.hpp"
 
-CREATE_PREDICATE((sizeof(U) > sizeof(int)), ComplexObject);
+CREATE_PREDICATE((sizeof(U) > sizeof(int) || !std::is_trivially_copy_constructible_v<U>), ComplexObject);
 
 // Vector for not complex objects
 template <typename T, typename Allocator = DefaultVectorAllocator<T>, typename Checker = void>
