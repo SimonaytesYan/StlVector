@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BasicVector.hpp"
+#include "Errors.h"
 
 CREATE_PREDICATE((sizeof(U) > sizeof(int) || !std::is_trivially_copy_constructible_v<U>), ComplexObject);
 
@@ -96,7 +97,8 @@ public:
 
     void Erase(const iterator& iterator) override
     {
-        assert(this->Begin() <= iterator && iterator < this->End());
+        if (!(this->Begin() <= iterator && iterator < this->End()))
+            throw IteratorOutOfBounce();
 
         size_type index = size_type(iterator - this->Begin());
         this->size_--;
@@ -108,9 +110,12 @@ public:
 
     void Erase(const iterator& it1, const iterator& it2) override
     {
-        assert(this->Begin() <= it1 && it1 < this->End());
-        assert(this->Begin() <= it2 && it2 <= this->End());
-        assert(it1 <= it2);
+        if (!(this>Begin() <= it1 && it1 < this->End()))
+            throw IteratorOutOfBounce();
+        if (!(this->Begin() <= it2 && it2 < this->End()));
+            throw IteratorOutOfBounce();
+        if (!(it1 <= it2))
+            throw It1BiggerThanIt2();
 
         size_type start = size_type(it1 - this->Begin());
         size_type shift = size_type(it2 - it1);
