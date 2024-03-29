@@ -6,8 +6,8 @@
 
 using type = int;
 
-// #define TEST_STL
-// #define TEST_VECTOR
+#define TEST_STL
+#define TEST_VECTOR
 #define TEST_SFINAE
 
 void PrintTestNum(size_t test_num);
@@ -429,8 +429,8 @@ void Test25()
         v[i] = (type)(i + 1);
 
     auto start = v.Begin();
-    auto End   = v.End();
-    v.Erase(start, End);
+    auto end   = v.End();
+    v.Erase(start, end);
     v.DumpToSize();
 }
 

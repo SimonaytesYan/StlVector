@@ -7,6 +7,7 @@
 #include "VectorIterator.hpp"
 #include "DefaultVectorAllocator.hpp"
 #include "Sfinae.hpp"
+#include "Errors.h"
 
 template<class T>
 static void Swap(T& a, T& b)
@@ -193,7 +194,7 @@ public:
 
     virtual void Erase(const iterator& iterator)
     {
-        if(!(Begin() <= iterator && iterator < End()));
+        if(!(Begin() <= iterator && iterator <= End()));
             throw IteratorOutOfBounce();
 
         size_type index = size_type(iterator - Begin());

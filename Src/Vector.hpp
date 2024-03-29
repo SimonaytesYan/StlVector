@@ -110,10 +110,11 @@ public:
 
     void Erase(const iterator& it1, const iterator& it2) override
     {
-        if (!(this>Begin() <= it1 && it1 < this->End()))
+        if (!(this->Begin() <= it1 && it1 <= this->End()))
             throw IteratorOutOfBounce();
-        if (!(this->Begin() <= it2 && it2 < this->End()));
+        if (!(this->Begin() <= it2 && it2 <= this->End()))
             throw IteratorOutOfBounce();
+        fprintf(stderr, "it2 OK\n");
         if (!(it1 <= it2))
             throw It1BiggerThanIt2();
 
