@@ -114,7 +114,6 @@ public:
             throw IteratorOutOfBounce();
         if (!(this->Begin() <= it2 && it2 <= this->End()))
             throw IteratorOutOfBounce();
-        fprintf(stderr, "it2 OK\n");
         if (!(it1 <= it2))
             throw It1BiggerThanIt2();
 
