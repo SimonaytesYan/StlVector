@@ -84,7 +84,7 @@ public:
         if (this->size_ < new_size)
         {
             for (size_type i = this->size_; i < new_size; i++)
-                this->allocator_.construct(&this->buffer_[i]);
+                this->allocator_.construct(&this->buffer_[i], value);
         }
         else if (this->size_ > new_size)
         {
