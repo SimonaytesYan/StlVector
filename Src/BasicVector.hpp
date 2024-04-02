@@ -148,12 +148,7 @@ public:
         if (capacity_ < new_size)
             Realloc(new_size);
         
-        if (size_ < new_size)
-        {
-            for (size_type i = size_; i < new_size; i++)
-                allocator_.construct(&buffer_[i]);
-        }
-        else if (size_ > new_size)
+        if (size_ > new_size)
         {
             for (size_t i = new_size; i < size_; i++)
                 allocator_.destruct(&buffer_[i]);
