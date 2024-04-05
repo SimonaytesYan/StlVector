@@ -6,8 +6,8 @@
 
 using type = int;
 
-#define TEST_STL
-#define TEST_VECTOR
+// #define TEST_STL
+// #define TEST_VECTOR
 #define TEST_SFINAE
 
 void PrintTestNum(size_t test_num);
