@@ -189,8 +189,8 @@ public:
 
     virtual void Erase(const iterator& iterator)
     {
-        if(!(Begin() <= iterator && iterator <= End()));
-            throw IteratorOutOfBounce();
+        // if(!(Begin() <= iterator && iterator <= End()));
+        //     throw IteratorOutOfBounce();
 
         size_type index = size_type(iterator - Begin());
         size_--;
@@ -202,12 +202,12 @@ public:
 
     virtual void Erase(const iterator& it1, const iterator& it2)
     {
-        if (!(Begin() <= it1 && it1 <= End()))
-            throw IteratorOutOfBounce();
-        if (!(Begin() <= it2 && it2 <= End()))
-            throw IteratorOutOfBounce();
-        if (!(it1 <= it2))
-            throw It1BiggerThanIt2();
+        // if (!(Begin() <= it1 && it1 <= End()))
+        //     throw IteratorOutOfBounce();
+        // if (!(Begin() <= it2 && it2 <= End()))
+        //     throw IteratorOutOfBounce();
+        // if (!(it1 <= it2))
+        //     throw It1BiggerThanIt2();
 
         size_type start = size_type(it1 - Begin());
         size_type shift = size_type(it2 - it1);
@@ -309,8 +309,8 @@ protected:
     template<class ...Args>
     void ShiftRight(const iterator& const_pos, Args ...arg)
     {
-        if (!(Begin() <= const_pos && const_pos <= End()))
-            throw IteratorOutOfBounce();
+        // if (!(Begin() <= const_pos && const_pos <= End()))
+        //     throw IteratorOutOfBounce();
         
         size_type index = const_pos - Begin();
 
