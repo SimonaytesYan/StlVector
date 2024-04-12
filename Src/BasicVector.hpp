@@ -309,7 +309,7 @@ protected:
     template<class ...Args>
     void ShiftRight(const iterator& const_pos, Args ...arg)
     {
-        if (!(Begin() < const_pos && const_pos <= End()))
+        if (!(Begin() <= const_pos && const_pos <= End()))
             throw IteratorOutOfBounce();
         
         size_type index = const_pos - Begin();
