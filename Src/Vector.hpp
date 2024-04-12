@@ -87,7 +87,7 @@ public:
 
     void Erase(const iterator& iterator) override
     {
-        if (!(this->Begin() <= iterator && iterator < this->End()))
+        if (!(this->Begin() <= iterator && iterator <= this->End()))
             throw IteratorOutOfBounce();
 
         size_type index = size_type(iterator - this->Begin());

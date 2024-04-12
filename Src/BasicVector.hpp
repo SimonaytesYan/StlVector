@@ -202,7 +202,7 @@ public:
 
     virtual void Erase(const iterator& it1, const iterator& it2)
     {
-        if (!(Begin() <= it1 && it1 < End()))
+        if (!(Begin() <= it1 && it1 <= End()))
             throw IteratorOutOfBounce();
         if (!(Begin() <= it2 && it2 <= End()))
             throw IteratorOutOfBounce();
