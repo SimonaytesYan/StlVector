@@ -55,8 +55,8 @@ public:
     }
 
     BasicVector(const BasicVector<T>& other) :
-    size_      (other.size),
-    capacity_  (other.capacity),
+    size_      (other.size_),
+    capacity_  (other.capacity_),
     allocator_ (),
     buffer_    (allocator_.allocate(capacity_))
     {
